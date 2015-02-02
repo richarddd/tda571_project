@@ -9,7 +9,7 @@ public class PlayerControl : MonoBehaviour {
 	private float syncDelay = 0f;
 	private float syncTime = 0f;
 	private Vector3 syncStartPosition = Vector3.zero;
-	private Vector3 syncEndVelocity = Vector3.zero;
+	private Vector3 syncVelocity = Vector3.zero;
 	private Vector3 syncEndPosition = Vector3.zero;
 	
 
@@ -21,7 +21,6 @@ public class PlayerControl : MonoBehaviour {
 	void OnSerializeNetworkView(BitStream stream, NetworkMessageInfo info)
 	{
 		Vector3 syncPosition = Vector3.zero;
-		Vector3 syncVelocity = Vector3.zero;
 		if (stream.isWriting)
 		{
 			syncPosition = rigidbody.position;
@@ -82,6 +81,9 @@ public class PlayerControl : MonoBehaviour {
 
 	void OnCollisionStay(Collision collisionInfo) {
 
+
+		//collisionInfo.
+
 		rigidbody.velocity = rigidbody.velocity * 0.95f;
 
 //		Debug.Log ("colliding");
@@ -101,6 +103,7 @@ public class PlayerControl : MonoBehaviour {
 		//rigidbody.AddForce (syncEndVelocity);
 
 		rigidbody.position = Vector3.Lerp(syncStartPosition, syncEndPosition, syncTime / syncDelay);
+		rigidbody.velocity = syncVelocity;
 	}
 
 	
