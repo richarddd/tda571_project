@@ -3,7 +3,8 @@ using System.Collections;
 
 public class PlayerControl : MonoBehaviour {
 
-	public float speed;
+	public float maxSpeed;
+	public GameObject camera;
 
 	// Use this for initialization
 	void Start () {
@@ -19,8 +20,19 @@ public class PlayerControl : MonoBehaviour {
 		float moveHorizental = Input.GetAxis("Horizontal");
 		float moveVertical = Input.GetAxis ("Vertical");
 
-		Vector3 movement = new Vector3 (moveHorizental, 0.0f, moveVertical);
+		//trying to get camera rotation smoother
+		int h = (int) moveHorizental;
+		int v = (int)  moveVertical;
 
-		rigidbody.AddForce(movement * speed);
+	
+		if (rigidbody.velocity.magnitude < maxSpeed) {
+			rigidbody.AddForce (camera.transform.forward * v);
+			rigidbody.AddForce (camera.transform.right * h);
+		}
+
+
+
+
+
 	}
 }
