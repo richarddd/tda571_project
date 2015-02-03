@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PlayerControl : MonoBehaviour {
 
-	public float maxSpeed;
+	//public float maxSpeed;
 
 	private float lastSynchronizationTime = 0f;
 	private float syncDelay = 0f;
@@ -46,16 +46,13 @@ public class PlayerControl : MonoBehaviour {
 
 	void Awake()
 	{
-
-
-
 		//networkview = gameObject.GetComponent<NetworkView> ();
 		//rigidbody = gameObject.GetComponent<Rigidbody> ();
 		networkView.observed = this;
 		lastSynchronizationTime = Time.time;
 
 		if (networkView.isMine) {
-						Camera.main.GetComponent<SmoothFollow> ().setTarget (gameObject);
+						Camera.main.GetComponent<SmoothFollow>().setTarget (gameObject);
 				}
 	}
 	
@@ -78,25 +75,13 @@ public class PlayerControl : MonoBehaviour {
 		float moveHorizontal = Input.GetAxis("Horizontal");
 		float moveVertical = Input.GetAxis ("Vertical");
 
-
-		//trying to get camera rotation smoother
-		int h = (int) moveHorizontal;
-		int v = (int)  moveVertical;
-
-	
-
-	
-
-
-		rigidbody.AddForce (Camera.main.transform.forward * v*10f);
-		rigidbody.AddForce (Camera.main.transform.right * h*10f);
+		rigidbody.AddForce (Camera.main.transform.forward * moveVertical*500f*Time.deltaTime);
+		rigidbody.AddForce (Camera.main.transform.right * moveHorizontal*500f*Time.deltaTime);
 
 
 	}
 
 	void OnCollisionStay(Collision collisionInfo) {
-	
-
 		rigidbody.velocity = rigidbody.velocity * 0.95f;
 
 	}
