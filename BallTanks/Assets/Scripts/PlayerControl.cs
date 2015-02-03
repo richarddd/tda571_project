@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PlayerControl : MonoBehaviour {
 
-	public float speed;
+	public float maxSpeed;
 
 	private float lastSynchronizationTime = 0f;
 	private float syncDelay = 0f;
@@ -46,16 +46,24 @@ public class PlayerControl : MonoBehaviour {
 
 	void Awake()
 	{
+
+
+
 		//networkview = gameObject.GetComponent<NetworkView> ();
 		//rigidbody = gameObject.GetComponent<Rigidbody> ();
 		networkView.observed = this;
 		lastSynchronizationTime = Time.time;
+
+		if (networkView.isMine) {
+						Camera.main.GetComponent<SmoothFollow> ().setTarget (gameObject);
+				}
 	}
 	
 	void FixedUpdate()
 	{
 		if (networkView.isMine)
 		{
+
 			InputMovement();
 			//InputColorChange();
 		}
@@ -67,59 +75,39 @@ public class PlayerControl : MonoBehaviour {
 
 	private void InputMovement()
 	{
-		float moveHorizental = Input.GetAxis("Horizontal");
+		float moveHorizontal = Input.GetAxis("Horizontal");
 		float moveVertical = Input.GetAxis ("Vertical");
 
 
-		
-		Vector3 movement = new Vector3 (moveHorizental, 0.0f, moveVertical);
-		rigidbody.AddForce(movement * speed);
+		//trying to get camera rotation smoother
+		int h = (int) moveHorizontal;
+		int v = (int)  moveVertical;
 
+	
+
+	
+
+
+		rigidbody.AddForce (Camera.main.transform.forward * v*10f);
+		rigidbody.AddForce (Camera.main.transform.right * h*10f);
 
 
 	}
 
 	void OnCollisionStay(Collision collisionInfo) {
-
-
-		//collisionInfo.
+	
 
 		rigidbody.velocity = rigidbody.velocity * 0.95f;
 
-//		Debug.Log ("colliding");
-//
-//		float moveHorizental = Input.GetAxis("Horizontal");
-//		float moveVertical = Input.GetAxis ("Vertical");
-//		Vector3 movement = new Vector3 (-moveHorizental, 0.0f, -moveVertical);
-//		float otherSpeed = (speed * 1f);
-//
-//		rigidbody.AddForce(movement * otherSpeed);
 	}
 		
 	private void SyncedMovement()
 	{
 		syncTime += Time.deltaTime;
-		//rigidbody.position = syncStartPosition;
-		//rigidbody.AddForce (syncEndVelocity);
-
 		rigidbody.position = Vector3.Lerp(syncStartPosition, syncEndPosition, syncTime / syncDelay);
 		rigidbody.velocity = syncVelocity;
 	}
+	
 
-	
-	private void InputColorChange()
-	{
-		if (Input.GetKeyDown(KeyCode.R))
-			ChangeColorTo(new Vector3(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f)));
-	}
-	
-	[RPC] void ChangeColorTo(Vector3 color)
-	{
-		renderer.material.color = new Color(color.x, color.y, color.z, 1f);
-		
-		if (networkView.isMine)
-			networkView.RPC("ChangeColorTo", RPCMode.OthersBuffered, color);
-	}
-	
 
 }
