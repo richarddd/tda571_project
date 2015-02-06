@@ -14,18 +14,39 @@ public class Killing : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider colInfo){
-		if (colInfo.tag == "Player") {
-			if(colInfo.networkView.isMine){
-				canvas.transform.GetChild(0).gameObject.SetActive(true);
+		if (colInfo.tag == "Player" && colInfo.networkView.isMine) {
 
-				int i = colInfo.gameObject.GetComponent<PlayerLife>().GetNumberOfLifes();
-				canvas.transform.GetChild(i).gameObject.SetActive(false);
-				i--;
-				colInfo.gameObject.GetComponent<PlayerLife>().setNumberOfLifes(i);
+			int lifeLeft = colInfo.gameObject.GetComponent<PlayerLife>().GetNumberOfLifes();
+			canvas.transform.GetChild(lifeLeft).gameObject.SetActive(false);
+			lifeLeft--;
+
+			//If the player have life left
+			if (lifeLeft > 0){
+
+				canvas.transform.GetChild(0).gameObject.SetActive(true);
+				colInfo.gameObject.GetComponent<PlayerLife>().setNumberOfLifes(lifeLeft);
+
+				colInfo.gameObject.SetActive(false);
+
+				StartCoroutine(Respawn(colInfo.gameObject));
 
 			}
-			Destroy(colInfo.gameObject);
 
+			//If the player lost the last life
+			else{
+				canvas.transform.GetChild(4).gameObject.SetActive(true);
+				Destroy(colInfo.gameObject);
+			}
 		}
+	}
+
+	//Used for respawning
+	IEnumerator Respawn(GameObject colInfo) {
+
+		yield return new WaitForSeconds(5);
+
+		colInfo.transform.position = Vector3.zero;
+		canvas.transform.GetChild(0).gameObject.SetActive(false);
+		colInfo.gameObject.SetActive(true);
 	}
 }
