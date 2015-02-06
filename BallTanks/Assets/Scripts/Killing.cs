@@ -17,6 +17,12 @@ public class Killing : MonoBehaviour {
 		if (colInfo.tag == "Player") {
 			if(colInfo.networkView.isMine){
 				canvas.transform.GetChild(0).gameObject.SetActive(true);
+
+				int i = colInfo.gameObject.GetComponent<PlayerLife>().GetNumberOfLifes();
+				canvas.transform.GetChild(i).gameObject.SetActive(false);
+				i--;
+				colInfo.gameObject.GetComponent<PlayerLife>().setNumberOfLifes(i);
+
 			}
 			Destroy(colInfo.gameObject);
 
