@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Killing : MonoBehaviour {
 	private GameObject canvas;
@@ -27,6 +28,8 @@ public class Killing : MonoBehaviour {
 				colInfo.gameObject.GetComponent<PlayerLife>().setNumberOfLifes(lifeLeft);
 
 				colInfo.gameObject.SetActive(false);
+				canvas.transform.GetChild(5).gameObject.SetActive(true);
+				canvas.transform.GetChild(6).gameObject.SetActive(true);
 
 				StartCoroutine(Respawn(colInfo.gameObject));
 
@@ -43,10 +46,19 @@ public class Killing : MonoBehaviour {
 	//Used for respawning
 	IEnumerator Respawn(GameObject colInfo) {
 
-		yield return new WaitForSeconds(5);
+		for (int i =5; i>0; i--) {
+			canvas.transform.GetChild(6).GetComponent<Text>().text = i.ToString();
+			yield return new WaitForSeconds (1);
 
-		colInfo.transform.position = Vector3.zero;
+		}
+		colInfo.rigidbody.velocity = Vector3.zero;
+		colInfo.transform.position = new Vector3(0,5,0);
+
+		//Gui stuff
+		canvas.transform.GetChild(5).gameObject.SetActive(false);
+		canvas.transform.GetChild(6).gameObject.SetActive(false);
 		canvas.transform.GetChild(0).gameObject.SetActive(false);
+
 		colInfo.gameObject.SetActive(true);
 	}
 }
