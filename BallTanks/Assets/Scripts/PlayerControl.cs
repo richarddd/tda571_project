@@ -11,8 +11,18 @@ public class PlayerControl : MonoBehaviour {
 	private Vector3 syncStartPosition = Vector3.zero;
 	private Vector3 syncVelocity = Vector3.zero;
 	private Vector3 syncEndPosition = Vector3.zero;
-	
 
+	
+	void OnCollisionEnter(Collision collision){
+		
+		//If the ball collides with a wall, reverse the movement
+		if (collision.gameObject.tag == "Wall") {
+			ContactPoint cp = collision.contacts[0];
+			Vector3 oldVelocity = rigidbody.velocity;
+			rigidbody.velocity = oldVelocity + cp.normal * 1.0f * oldVelocity.magnitude;
+		}
+		
+	}
 	// Use this for initialization
 	void Start () {
 	
