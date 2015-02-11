@@ -10,7 +10,7 @@ public class NetworkManager : MonoBehaviour
 	private bool isRefreshingHostList = false;
 	private HostData[] hostList;
 	
-	public GameObject ballPrefab;
+	public GameObject playerPrefab;
 	
 	
 	void OnGUI()
@@ -76,12 +76,11 @@ public class NetworkManager : MonoBehaviour
 		SpawnPlayer();
 	}
 	
-	
+
 	private void SpawnPlayer()
 	{
 
-		Quaternion id = Quaternion.identity;
 
-		Network.Instantiate(ballPrefab, Vector3.up * 5, id, 0);
+		GameObject player = (GameObject)Network.Instantiate(playerPrefab, Vector3.up * 5, Quaternion.identity, 0);
 	}
 }
