@@ -80,7 +80,7 @@ public class NetworkManager : MonoBehaviour
 	private void SpawnPlayer()
 	{
 
-
+		GameObject.FindGameObjectWithTag ("Killzone").networkView.RPC ("PlayerJoined", RPCMode.AllBuffered);
 		GameObject player = (GameObject)Network.Instantiate(playerPrefab, Vector3.up * 5, Quaternion.identity, 0);
 	}
 }
