@@ -40,7 +40,7 @@ public class CannonController : MonoBehaviour
 				playerTransform = transform.parent.Find ("Ball").transform;
 				offset = new Vector3 (0, offsetY, 0);
 				barrelTransform = transform.FindChild ("Barrel").transform;
-				shotPositionTransform = transform.FindChild ("Barrel/ShotPos").transform;
+				shotPositionTransform = transform.FindChild ("Barrel/shotPos").transform;
 				
 		}
 
@@ -86,7 +86,7 @@ public class CannonController : MonoBehaviour
 		void FireShot ()
 		{
 				Rigidbody shot = Instantiate (projectile, shotPositionTransform.position, shotPositionTransform.rotation) as Rigidbody;
-				shot.AddForce (transform.up * shotForce * Time.deltaTime * -1);
+		shot.AddForce (shotPositionTransform.up * shotForce * Time.deltaTime * -1);
 		
 		}
 
@@ -96,6 +96,7 @@ public class CannonController : MonoBehaviour
 		void Update ()
 		{
 				this.transform.position = playerTransform.position + offset;
+		shotPositionTransform = transform.FindChild ("Barrel/shotPos").transform;
 				
 
 				if (networkView.isMine) {
