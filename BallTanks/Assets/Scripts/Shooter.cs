@@ -6,17 +6,8 @@ public class Shooter : MonoBehaviour
 
 		public Rigidbody projectile;
 		public float shotForce = 1000f;
-		public float moveSpeed = 10f;
-
-		private Transform barrelTransform;
 
 		private bool shotFired = false;
-
-
-		void Start ()
-		{
-				barrelTransform = transform.FindChild ("Barrel").transform;
-		}
 
 		void OnSerializeNetworkView (BitStream stream, NetworkMessageInfo info)
 		{
@@ -36,8 +27,8 @@ public class Shooter : MonoBehaviour
 
 		void FireShot ()
 		{
-				Rigidbody shot = Instantiate (projectile, transform.position + new Vector3 (0, 0.1f, 0), Quaternion.identity) as Rigidbody;
-				shot.AddForce (barrelTransform.up * shotForce * Time.deltaTime * 90 * -1);
+				Rigidbody shot = Instantiate (projectile, transform.position, transform.rotation) as Rigidbody;
+				shot.AddForce (transform.up * shotForce * Time.deltaTime * -1);
 
 		}
 
