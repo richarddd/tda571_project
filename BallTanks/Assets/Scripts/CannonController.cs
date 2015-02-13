@@ -72,10 +72,11 @@ public class CannonController : MonoBehaviour
 		// Update is called once per frame
 		void Update ()
 		{
-
 				this.transform.position = playerTransform.position + offset;
+				
 
 				if (networkView.isMine) {
+						
 						float targetAngle = Camera.main.transform.eulerAngles.y - 90;
 						Vector3 rotationY = new Vector3 (0, targetAngle, 0);
 						float cameraAngle = Camera.main.transform.rotation.eulerAngles.x;
@@ -89,7 +90,12 @@ public class CannonController : MonoBehaviour
 				} else {
 						syncTime += Time.deltaTime;
 						Debug.Log (syncEndRotationY);
+						
 						transform.eulerAngles = new Vector3 (0, Mathf.Lerp (syncStartRotationY, syncEndRotationY, syncTime / syncDelay), 0);
+
+
+
+						barrelTransform.rotation = Quaternion.Euler (transform.eulerAngles + new Vector3 (0, 0, Mathf.Lerp (syncStartBarrelAngle, syncEndBarrelAngle, syncTime / syncDelay)));
 				}
 		}
 
