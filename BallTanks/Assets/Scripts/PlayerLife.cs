@@ -32,4 +32,12 @@ public class PlayerLife : MonoBehaviour {
 	void Update () {
 	
 	}
+
+	[RPC]
+	void GameOver(){
+		Debug.Log ("WON");
+		canvas.transform.GetChild (7).gameObject.SetActive (true);
+
+		
+	}
 }
