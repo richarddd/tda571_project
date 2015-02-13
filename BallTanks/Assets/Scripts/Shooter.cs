@@ -29,7 +29,7 @@ public class Shooter : MonoBehaviour
 						stream.Serialize (ref isShooting);
 						if (isShooting) {
 								FireShot ();
-								shotFired = false;
+								//shotFired = false;
 						}
 				}
 		}
