@@ -13,6 +13,14 @@ public class Shooter : MonoBehaviour
 		private bool shotFired = false;
 
 
+		void Awake ()
+		{
+
+				networkView.observed = this;
+			
+		}
+
+
 		void Start ()
 		{
 				barrelTransform = transform.FindChild ("Barrel").transform;
@@ -32,6 +40,8 @@ public class Shooter : MonoBehaviour
 								//shotFired = false;
 						}
 				}
+				Debug.Log (networkView.viewID);
+				Debug.Log (isShooting);
 		}
 
 		void FireShot ()
