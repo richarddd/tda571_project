@@ -5,7 +5,8 @@ public class CannonController : MonoBehaviour
 {
 	
 		private Transform playerTransform;
-		public Transform barrelTransform;
+		private Transform barrelTransform;
+		private Transform shotPositionTransform;
 		private float lastSynchronizationTime = 0f;
 		private float syncDelay = 0f;
 		private float syncTime = 0f;
@@ -24,6 +25,11 @@ public class CannonController : MonoBehaviour
 
 		private const float RotationSmoothing = 0.01f;
 		private const float BarrelSmoothing = 0.1f;
+
+		public Rigidbody projectile;
+		public float shotForce = 1000f;
+	
+		private bool shotFired = false;
 	
 
 
@@ -34,6 +40,7 @@ public class CannonController : MonoBehaviour
 				playerTransform = transform.parent.Find ("Ball").transform;
 				offset = new Vector3 (0, offsetY, 0);
 				barrelTransform = transform.FindChild ("Barrel").transform;
+				shotPositionTransform = transform.FindChild ("Barrel/ShotPos").transform;
 				
 		}
 
@@ -47,11 +54,14 @@ public class CannonController : MonoBehaviour
 		{
 				float syncRotationY = 0;
 				float syncBarrelAngle = 0;
+				bool isShooting = false;
 				if (stream.isWriting) {
 						syncRotationY = transform.rotation.eulerAngles.y;
 						syncBarrelAngle = barrelTransform.rotation.eulerAngles.z;
 						stream.Serialize (ref syncRotationY);
 						stream.Serialize (ref syncBarrelAngle);
+						isShooting = shotFired;
+						stream.Serialize (ref isShooting);
 				} else {
 						stream.Serialize (ref syncRotationY);
 						stream.Serialize (ref syncBarrelAngle);
@@ -64,7 +74,20 @@ public class CannonController : MonoBehaviour
 				
 						syncEndRotationY = syncRotationY + RotationSmoothing * syncDelay;
 						syncStartRotationY = transform.rotation.eulerAngles.y;
+
+						stream.Serialize (ref isShooting);
+						if (isShooting) {
+								FireShot ();
+								shotFired = false;
+						}
 				}
+		}
+
+		void FireShot ()
+		{
+				Rigidbody shot = Instantiate (projectile, shotPositionTransform.position, shotPositionTransform.rotation) as Rigidbody;
+				shot.AddForce (transform.up * shotForce * Time.deltaTime * -1);
+		
 		}
 
 
@@ -86,6 +109,11 @@ public class CannonController : MonoBehaviour
 						
 						transform.eulerAngles = rotationY;
 						barrelTransform.rotation = Quaternion.Euler (rotationY + new Vector3 (0, 0, barrelAngle));
+
+						if (Input.GetButtonUp ("Fire1")) {
+								shotFired = true;
+								FireShot ();
+						}
 
 				} else {
 						syncTime += Time.deltaTime;
