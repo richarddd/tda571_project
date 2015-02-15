@@ -52,7 +52,7 @@ public class TextureDetector : MonoBehaviour {
 		return cellMix;
 	}
 	
-	private int GetMainTexture(Vector3 WorldPos){
+	public int GetMainTexture(Vector3 WorldPos){
 		// returns the zero-based index of the most dominant texture
 		// on the main terrain at this world position.
 		float[] mix = GetTextureMix(WorldPos);

@@ -28,7 +28,7 @@ public class PlayerControlOffline : MonoBehaviour {
 		rigidbody.AddForceAtPosition (Camera.main.transform.right * moveHorizontal*500f*Time.deltaTime, forcePosition);
 
 		// enable this to visualize the force position in real-time
-		Debug.DrawRay (forcePosition, Camera.main.transform.right);
+		//Debug.DrawRay (forcePosition, Camera.main.transform.right);
 	}
 
 	// removed this function in order to rely on the rigidObject's angularDrag parameter.
