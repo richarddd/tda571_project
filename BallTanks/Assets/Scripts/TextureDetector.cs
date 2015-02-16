@@ -72,6 +72,7 @@ public class TextureDetector : MonoBehaviour {
 
 	void OnCollisionStay(Collision collInfo)
 	{
+		Debug.Log("TEST");
 		// validate coordinates first, check if there's a terrain beneath WorldPos
 		RaycastHit rayHit = new RaycastHit();
 		if (Physics.Raycast (transform.position, -transform.up, out rayHit))
