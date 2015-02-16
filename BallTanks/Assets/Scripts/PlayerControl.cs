@@ -12,17 +12,20 @@ public class PlayerControl : MonoBehaviour
 		private Vector3 syncStartPosition = Vector3.zero;
 		private Vector3 syncVelocity = Vector3.zero;
 		private Vector3 syncEndPosition = Vector3.zero;
-
 	
-		void OnCollisionEnter (Collision collision)
-		{
-		
+	void OnCollisionEnter (Collision collision)
+	{
+		Debug.Log ("here I am");
+
 				//If the ball collides with a wall, reverse the movement
-				if (collision.gameObject.tag == "Wall") {
-						ContactPoint cp = collision.contacts [0];
-						Vector3 oldVelocity = rigidbody.velocity;
-						rigidbody.velocity = oldVelocity + cp.normal * 1.0f * oldVelocity.magnitude;
+				if (collision.gameObject.tag == "Wall" || collision.gameObject.tag == "Player") {
+				
+					ContactPoint cp = collision.contacts [0];
+					Vector3 oldVelocity = rigidbody.velocity;
+					rigidbody.velocity = oldVelocity + cp.normal * collision.relativeVelocity.magnitude * 2.0f;
 				}
+				
+				
 		
 		}
 		// Use this for initialization
@@ -79,12 +82,11 @@ public class PlayerControl : MonoBehaviour
 
 		private void InputMovement ()
 		{
-				float moveHorizontal = Input.GetAxis ("Horizontal");
-				float moveVertical = Input.GetAxis ("Vertical");
+			float moveHorizontal = Input.GetAxis ("Horizontal");
+			float moveVertical = Input.GetAxis ("Vertical");
 
-				rigidbody.AddForce (Camera.main.transform.forward * moveVertical * 1000f * Time.deltaTime);
-				rigidbody.AddForce (Camera.main.transform.right * moveHorizontal * 1000f * Time.deltaTime);
-
+			rigidbody.AddForce (Camera.main.transform.forward * moveVertical * 1000f * Time.deltaTime);
+			rigidbody.AddForce (Camera.main.transform.right * moveHorizontal * 1000f * Time.deltaTime);
 
 		}
 
@@ -93,6 +95,7 @@ public class PlayerControl : MonoBehaviour
 				rigidbody.velocity = rigidbody.velocity * 0.95f;
 
 		}
+		
 		
 		private void SyncedMovement ()
 		{
