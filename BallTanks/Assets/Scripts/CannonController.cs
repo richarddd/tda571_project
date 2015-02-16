@@ -40,7 +40,7 @@ public class CannonController : MonoBehaviour
 				playerTransform = transform.parent.Find ("Ball").transform;
 				offset = new Vector3 (0, offsetY, 0);
 				barrelTransform = transform.FindChild ("Barrel").transform;
-				shotPositionTransform = transform.FindChild ("Barrel/shotPos").transform;
+				shotPositionTransform = transform.FindChild ("Barrel/ShotPos").transform;
 				
 		}
 
@@ -62,12 +62,16 @@ public class CannonController : MonoBehaviour
 						stream.Serialize (ref syncBarrelAngle);
 						isShooting = shotFired;
 						stream.Serialize (ref isShooting);
+						shotFired = false;
 				} else {
 						stream.Serialize (ref syncRotationY);
 						stream.Serialize (ref syncBarrelAngle);
 						syncTime = 0f;
 						syncDelay = Time.time - lastSynchronizationTime;
 						lastSynchronizationTime = Time.time;
+
+
+
 						
 						syncEndBarrelAngle = syncBarrelAngle + BarrelSmoothing * syncDelay;
 						syncStartBarrelAngle = barrelTransform.rotation.eulerAngles.z;
@@ -76,8 +80,10 @@ public class CannonController : MonoBehaviour
 						syncStartRotationY = transform.rotation.eulerAngles.y;
 
 						stream.Serialize (ref isShooting);
+
 						if (isShooting) {
 								FireShot ();
+								isShooting = false;
 								shotFired = false;
 						}
 				}
@@ -86,7 +92,7 @@ public class CannonController : MonoBehaviour
 		void FireShot ()
 		{
 				Rigidbody shot = Instantiate (projectile, shotPositionTransform.position, shotPositionTransform.rotation) as Rigidbody;
-		shot.AddForce (shotPositionTransform.up * shotForce * Time.deltaTime * -1);
+				shot.AddForce (shotPositionTransform.up * shotForce * Time.deltaTime * -1);
 		
 		}
 
@@ -96,7 +102,6 @@ public class CannonController : MonoBehaviour
 		void Update ()
 		{
 				this.transform.position = playerTransform.position + offset;
-		shotPositionTransform = transform.FindChild ("Barrel/shotPos").transform;
 				
 
 				if (networkView.isMine) {
@@ -118,7 +123,7 @@ public class CannonController : MonoBehaviour
 
 				} else {
 						syncTime += Time.deltaTime;
-						Debug.Log (syncEndRotationY);
+
 						
 						transform.eulerAngles = new Vector3 (0, Mathf.Lerp (syncStartRotationY, syncEndRotationY, syncTime / syncDelay), 0);
 

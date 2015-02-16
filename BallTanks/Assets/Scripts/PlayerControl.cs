@@ -65,7 +65,7 @@ public class PlayerControl : MonoBehaviour
 				lastSynchronizationTime = Time.time;
 
 				if (networkView.isMine) {
-						Camera.main.GetComponent<SmoothFollow> ().setTarget (gameObject);
+						//Camera.main.GetComponent<SmoothFollow> ().setTarget (gameObject);
 				}
 		}
 	
