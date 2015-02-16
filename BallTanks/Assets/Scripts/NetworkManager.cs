@@ -2,15 +2,17 @@
 using System.Collections;
 
 
-public class NetworkManager : MonoBehaviour
+public class NetworkManager : Singleton<NetworkManager>
 {
-		private const string typeName = "TDA571";
-		private const string gameName = "ROOM 99";
+		private const string typeName = "TDA5710";
+		private const string gameName = "ROOM99";
 	
 		private bool isRefreshingHostList = false;
 		private HostData[] hostList;
 	
 		public GameObject playerPrefab;
+
+
 	
 	
 		void OnGUI ()
@@ -80,5 +82,6 @@ public class NetworkManager : MonoBehaviour
 
 				GameObject.FindGameObjectWithTag ("Killzone").networkView.RPC ("PlayerJoined", RPCMode.AllBuffered);
 				GameObject player = (GameObject)Network.Instantiate (playerPrefab, Vector3.up * 5, Quaternion.identity, 0);
+				//player.networkView.viewID;
 		}
 }
