@@ -85,6 +85,5 @@ public class NetworkManager : Singleton<NetworkManager>
 				
 				GameObject player = (GameObject)Network.Instantiate (playerPrefab, Vector3.up * 5, Quaternion.identity, 0);
 				//player.networkView.viewID;
-				GameObject.FindGameObjectWithTag ("MainCamera").networkView.RPC ("addPlayer", RPCMode.AllBuffered,  player.networkView.viewID);
 	}
 }
