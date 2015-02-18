@@ -10,16 +10,30 @@ public class CameraController : MonoBehaviour {
 	float aspectRatio;
 	GameObject[] activePlayers =null;
 	float [] playerXPos = null;
+	float [] playerZPos = null;
 	float maxX =0;
 	float minX=0;
+
+	float maxZ =0;
+	float minZ=0;
+
 	GameObject playerWithMaxX;
 	GameObject playerWithMinX;
+	GameObject playerWithMaxZ;
+	GameObject playerWithMinZ;
 
 	Vector3 center =Vector3.zero;
 	Vector3 oldCenter=Vector3.zero;
 
-	int maxIndex;
-	int minIndex;
+	int maxXIndex;
+	int minXIndex;
+	int maxZIndex;
+	int minZIndex;
+
+	Transform player1X;
+	Transform player2X;
+	Transform player1Z;
+	Transform player2Z;
 	// Use this for initialization
 	void Start () {
 		mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
@@ -33,18 +47,25 @@ public class CameraController : MonoBehaviour {
 			activePlayers = GameObject.FindGameObjectsWithTag ("Player");
 
 			if (activePlayers != null) {
-				
-				calculateMaxAndMin();
+				//Calculates how much the camera should zoom in the x-axis
+				calculateMaxAndMinX();
 						
-				if(maxIndex != minIndex){
-					playerWithMaxX = activePlayers[maxIndex];
-					playerWithMinX =activePlayers[minIndex];
+				if(maxXIndex != minXIndex){
+					playerWithMaxX = activePlayers[maxXIndex];
+					playerWithMinX =activePlayers[minXIndex];
 					minX = 0;
 					maxX = 0;
 				}else if (activePlayers.Length ==1){
-					playerWithMinX =activePlayers[minIndex];
+					playerWithMinX =activePlayers[minXIndex];
 					calculateSinglePlayerCamera ();
 				}
+
+			if(maxZIndex != minZIndex){
+				playerWithMaxZ = activePlayers[maxZIndex];
+				playerWithMinZ =activePlayers[minZIndex];
+				minZ = 0;
+				maxZ = 0;
+			}
 
 				if (activePlayers.Length > 1 && networkView.isMine) {
 					calculateCameraPos ();
@@ -52,37 +73,58 @@ public class CameraController : MonoBehaviour {
 			}	
 		}
 
-	void calculateMaxAndMin(){
+	void calculateMaxAndMinX(){
 		playerXPos = new float[activePlayers.Length];
-		maxIndex=0;
-		minIndex=0;
+		playerZPos = new float[activePlayers.Length];
+		maxXIndex=0;
+		minXIndex=0;
+		maxZIndex=0;
+		minZIndex=0;
 
 		for (int i=0; i <activePlayers.Length; i++){
-			float player =activePlayers[i].transform.position.x;
+			float playerX =activePlayers[i].transform.position.x;
 			playerXPos[i]=activePlayers[i].transform.position.x;
-			if (player >= maxX) {
-				maxX = player;
-				maxIndex=i;
+
+			float playerZ = activePlayers[i].transform.position.z;
+			playerZPos[i]=activePlayers[i].transform.position.z;
+
+			if (playerX >= maxX) {
+				maxX = playerX;
+				maxXIndex=i;
 			}
-			if (player <= minX) {
-				minX = player;
-				minIndex=i;
+			if (playerX <= minX) {
+				minX = playerX;
+				minXIndex=i;
+			}
+			//BROKEN
+			if (playerZ >= maxZ) {
+				maxZ = playerZ;
+				maxZIndex=i;
+			}
+			if (playerZ <= minZ) {
+				minZ = playerZ;
+				minZIndex=i;
 			}
 		}	
 	}
 
 	void calculateCameraPos()
 	{
-		Transform player1 = playerWithMaxX.transform;
-		Transform player2 = playerWithMinX.transform;
-		distanceBetweenPlayers = (player2.position - player1.position).magnitude;
-		center = player1.position + 0.5f * (player2.position - player1.position);
-		//Debug.Log (center);
-		//Vector3 tempCenter = center / 2;
+		player1X = playerWithMaxX.transform;
+		player2X = playerWithMinX.transform;
+		player1Z = playerWithMaxZ.transform;
+		player2Z = playerWithMinZ.transform;
+
+
+		calculateDistanceBetweenPlayers ();
+
+		center.x = player1X.position.x + (0.5f * (player2X.position.x - player1X.position.x));
+		center.z = player1Z.position.z + (0.5f * (player2Z.position.z - player1Z.position.z));
 		Vector3 temp= mainCamera.transform.position; 
-		//Debug.Log (center);
+		center.z -= 2f;
 		temp.x= center.x;
 		temp.z += center.z- oldCenter.z;
+
 		
 		mainCamera.transform.position = temp;
 		oldCenter = center;
@@ -91,6 +133,24 @@ public class CameraController : MonoBehaviour {
 		Camera.main.fieldOfView = 2.0f * Mathf.Rad2Deg * Mathf.Atan((0.5f * distanceBetweenPlayers) / (distanceFromMiddlePoint * aspectRatio));
 		mainCamera.camera.fieldOfView += 15f;
 
+
+	}
+
+	void calculateDistanceBetweenPlayers(){
+		distanceBetweenPlayers = 0;
+		if ((player2Z.position - player1Z.position).magnitude>distanceBetweenPlayers){
+			distanceBetweenPlayers = (player2Z.position - player1Z.position).magnitude;
+		
+		}if((player2Z.position - player1X.position).magnitude>distanceBetweenPlayers){
+			distanceBetweenPlayers = (player2Z.position - player1X.position).magnitude;
+		
+		}if((player2X.position - player1Z.position).magnitude>distanceBetweenPlayers){
+			distanceBetweenPlayers = (player1X.position - player1Z.position).magnitude;
+
+		}if((player2X.position - player1X.position).magnitude>distanceBetweenPlayers){
+			distanceBetweenPlayers = (player2X.position - player1X.position).magnitude;
+
+		}
 
 	}
 
@@ -106,18 +166,5 @@ public class CameraController : MonoBehaviour {
 		mainCamera.transform.position = temp;
 		oldCenter = center;
 
-
-		/*
-		//This is for zooming TODO might not be needed here
-		if (playerWithMaxX.renderer.isVisible) {
-			if(Vector3.Distance(mainCamera.transform.position,center)>startDistance){
-				mainCamera.transform.Translate(Vector3.forward * 2 * Time.deltaTime);
-				Debug.Log (Vector3.Distance(mainCamera.transform.position,center) + " " +startDistance);
-			}
-			//Debug.Log ("forward");
-		} else if (!playerWithMaxX.renderer.isVisible){
-			mainCamera.transform.Translate(Vector3.back * 2 * Time.deltaTime);
-			Debug.Log ("back");
-		} */
 	}
 }
