@@ -25,7 +25,7 @@ public class Killing : MonoBehaviour {
 
 	void OnTriggerEnter(Collider colInfo){
 
-		if (colInfo.tag == "Player" && colInfo.networkView.isMine) {
+		if (colInfo.tag == "Player" && colInfo.transform.parent.networkView.isMine) {
 
 			int lifeLeft = colInfo.gameObject.transform.parent.GetComponent<PlayerLife>().GetNumberOfLifes();
 			canvas.transform.GetChild(lifeLeft).gameObject.SetActive(false);
