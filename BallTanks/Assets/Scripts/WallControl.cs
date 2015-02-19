@@ -7,9 +7,10 @@ public class WallControl : MonoBehaviour {
 
 	void OnCollisionEnter(Collision collision){
 		if (collision.gameObject.tag == "Player" || collision.gameObject.tag == "Projectile") {
-			gameObject.SetActive (false);
-			Instantiate(explosion, transform.position, transform.rotation);
+			Network.Destroy(gameObject);
+			Network.Instantiate(explosion, transform.position, transform.rotation,0);
 		}
+
 		
 	}
 

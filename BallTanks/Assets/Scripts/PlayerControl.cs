@@ -13,23 +13,26 @@ public class PlayerControl : MonoBehaviour
 		private Vector3 syncVelocity = Vector3.zero;
 		private Vector3 syncEndPosition = Vector3.zero;
 
+		private bool playerIsFrozen = false;
+		public float frozenTimeInterval;
+		private float timePassed = 0f;
 	
-		void OnCollisionEnter (Collision collision)
-		{
+	void OnCollisionEnter (Collision collision)
+	{
+			if (collision.gameObject.tag == "Wall" || collision.gameObject.tag == "Player") {
+			
+				ContactPoint cp = collision.contacts [0];
+				Vector3 oldVelocity = rigidbody.velocity;
+				rigidbody.velocity = oldVelocity + cp.normal * collision.relativeVelocity.magnitude * 2.0f;
+			}
 		
-				//If the ball collides with a wall, reverse the movement
-				if (collision.gameObject.tag == "Wall") {
-						ContactPoint cp = collision.contacts [0];
-						Vector3 oldVelocity = rigidbody.velocity;
-						rigidbody.velocity = oldVelocity + cp.normal * 1.0f * oldVelocity.magnitude;
-				}
-		
+	}
+
+	void OnTriggerEnter(Collider collider){
+		if (collider.gameObject.tag == "FreezePowerup") {
+			playerIsFrozen = true;
 		}
-		// Use this for initialization
-		void Start ()
-		{
-	
-		}
+	} 
 
 		void OnSerializeNetworkView (BitStream stream, NetworkMessageInfo info)
 		{
@@ -65,6 +68,16 @@ public class PlayerControl : MonoBehaviour
 						//Camera.main.GetComponent<SmoothFollow> ().setTarget (gameObject);
 				}
 		}
+		void Update(){
+			if (playerIsFrozen) {
+				timePassed += Time.deltaTime;
+				if(timePassed > frozenTimeInterval){
+					timePassed = 0f;
+					playerIsFrozen = false;
+				}
+			}
+			
+		}
 	
 		void FixedUpdate ()
 		{
@@ -79,11 +92,12 @@ public class PlayerControl : MonoBehaviour
 
 		private void InputMovement ()
 		{
-				float moveHorizontal = Input.GetAxis ("Horizontal");
-				float moveVertical = Input.GetAxis ("Vertical");
-
-				rigidbody.AddForce (Camera.main.transform.forward * moveVertical * 1000f * Time.deltaTime);
-				rigidbody.AddForce (Camera.main.transform.right * moveHorizontal * 1000f * Time.deltaTime);
+			float moveHorizontal = Input.GetAxis ("Horizontal");
+			float moveVertical = Input.GetAxis ("Vertical");
+			if (!playerIsFrozen) {
+						rigidbody.AddForce (Camera.main.transform.forward * moveVertical * 1000f * Time.deltaTime);
+						rigidbody.AddForce (Camera.main.transform.right * moveHorizontal * 1000f * Time.deltaTime);
+				}
 
 
 		}
@@ -93,6 +107,7 @@ public class PlayerControl : MonoBehaviour
 				rigidbody.velocity = rigidbody.velocity * 0.95f;
 
 		}
+		
 		
 		private void SyncedMovement ()
 		{
