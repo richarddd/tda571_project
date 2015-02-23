@@ -24,46 +24,55 @@ public class Killing : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider colInfo){
+		GameObject playerToKill = colInfo.gameObject;
+		if (colInfo.tag == "Player" && colInfo.transform.parent.networkView.isMine) {
+			Kill (playerToKill);
+		}
+	}
 
-		if (colInfo.tag == "Player" && colInfo.networkView.isMine) {
-
-			int lifeLeft = colInfo.gameObject.transform.parent.GetComponent<PlayerLife>().GetNumberOfLifes();
-			canvas.transform.GetChild(lifeLeft).gameObject.SetActive(false);
-			lifeLeft--;
-
+	public void Kill (GameObject colInfo){
+		//Debug.Log (colInfo.name);
+		int lifeLeft = colInfo.gameObject.transform.parent.GetComponent<PlayerLife>().GetNumberOfLifes();
+		canvas.transform.GetChild(lifeLeft).gameObject.SetActive(false);
+		lifeLeft--;
+			
 			//If the player have life left
-			if (lifeLeft > 0){
-
-				canvas.transform.GetChild(0).gameObject.SetActive(true);
-				colInfo.gameObject.transform.parent.GetComponent<PlayerLife>().setNumberOfLifes(lifeLeft);
-
-				for (int i=0; i<colInfo.gameObject.transform.parent.childCount; i++){
-					colInfo.gameObject.transform.parent.GetChild(i).gameObject.SetActive(false);
-				}
-
-				canvas.transform.GetChild(5).gameObject.SetActive(true);
-				canvas.transform.GetChild(6).gameObject.SetActive(true);
-
-				StartCoroutine(Respawn(colInfo.gameObject));
-
+		if (lifeLeft > 0){
+				
+			canvas.transform.GetChild(0).gameObject.SetActive(true);
+			colInfo.gameObject.transform.parent.GetComponent<PlayerLife>().setNumberOfLifes(lifeLeft);
+				
+			for (int i=0; i<colInfo.gameObject.transform.parent.childCount; i++){
+				//colInfo.gameObject.transform.parent.GetChild(i).gameObject.SetActive(false);
+				colInfo.gameObject.transform.parent.gameObject.SetActive(false);
 			}
+				
+			canvas.transform.GetChild(5).gameObject.SetActive(true);
+			canvas.transform.GetChild(6).gameObject.SetActive(true);
 
+			colInfo.gameObject.transform.parent.GetComponent<PlayerHealthBar>().setCurrentHealth(100);	
+				
+			StartCoroutine(Respawn(colInfo.gameObject));
+				
+		}
+			
 			//If the player lost the last life
-			else{
-				canvas.transform.GetChild(4).gameObject.SetActive(true);
+		else{
+			canvas.transform.GetChild(4).gameObject.SetActive(true);
 				//Destroy(colInfo.gameObject);
-				for (int i=0; i<colInfo.gameObject.transform.parent.childCount; i++){
-					Destroy(colInfo.gameObject.transform.parent.GetChild(i).gameObject);
-				}
-
-				noOfPlayers--;
-
-				if (noOfPlayers<2){
+			for (int i=0; i<colInfo.gameObject.transform.parent.childCount; i++){
+				//Destroy(colInfo.gameObject.transform.parent.GetChild(i).gameObject);
+				Destroy(colInfo.gameObject.transform.parent.gameObject);
+			}
+				
+			noOfPlayers--;
+				
+			if (noOfPlayers<2){
 					//GameObject.FindGameObjectWithTag("Player").SendMessage("GameOver");
-					GameObject.FindGameObjectWithTag("Player").gameObject.transform.parent.networkView.RPC ("GameOver",RPCMode.OthersBuffered);
-				}
+				GameObject.FindGameObjectWithTag("Player").gameObject.transform.parent.networkView.RPC ("GameOver",RPCMode.OthersBuffered);
 			}
 		}
+		
 	}
 
 	//Used for respawning
@@ -83,7 +92,9 @@ public class Killing : MonoBehaviour {
 		canvas.transform.GetChild(0).gameObject.SetActive(false);
 
 		for (int i=0; i<colInfo.gameObject.transform.parent.childCount; i++){
-			colInfo.gameObject.transform.parent.GetChild(i).gameObject.SetActive(true);
+			//colInfo.gameObject.transform.parent.GetChild(i).gameObject.SetActive(true);
+			colInfo.gameObject.transform.parent.gameObject.SetActive(true);
+
 		}
 	}
 }
