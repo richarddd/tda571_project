@@ -28,7 +28,7 @@ public class PlayerControl : MonoBehaviour
 	}
 
 	void OnTriggerEnter(Collider collider){
-		if (collider.gameObject.tag == "FreezePowerup") {
+		if (collider.gameObject.tag == "Powerup") {
 			playerIsFrozen = true;
 		}
 	} 
