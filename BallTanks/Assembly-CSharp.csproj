@@ -62,9 +62,17 @@
      <Compile Include="Assets\Scripts\SmoothFollowOffline.cs" />
      <Compile Include="Assets\Scripts\TextureDetector.cs" />
      <Compile Include="Assets\Scripts\WallControl.cs" />
+     <None Include="Assets\New Folder\environmental assets\Lava\Sources\Shaders\Lava.shader" />
+     <None Include="Assets\Standard Assets\Water (Pro Only)\Water3\Sources\Shaders\FX-Water3.shader" />
+     <None Include="Assets\Standard Assets\Water (Basic)\Sources\Shaders\FX-Water Simple.shader" />
+     <None Include="Assets\Standard Assets\LavaPackage\Sources\Lava.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>D:/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.2/UnityEngine.UI.dll</HintPath>
  </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{78BDE17A-AB68-8801-9442-EAB66A39C772}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
