@@ -2,11 +2,13 @@
 using System.Collections;
 
 public class FreezePowerupManager : MonoBehaviour {
+	public GameObject myAudio;
 
 	void OnTriggerEnter (Collider collider) {
-		//Todo: Send message to player that he is frozen
 		if (collider.gameObject.tag == "Player") {
-			Network.Destroy (gameObject);
+
+			Network.Instantiate(myAudio, transform.position, transform.rotation,0);
+			Network.Destroy(gameObject);
 		}
 	}
 }

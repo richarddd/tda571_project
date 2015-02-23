@@ -14,7 +14,7 @@ public class PlayerControl : MonoBehaviour
 		private Vector3 syncEndPosition = Vector3.zero;
 
 		private bool playerIsFrozen = false;
-		public float frozenTimeInterval;
+		public float frozenTimeInterval = 5;
 		private float timePassed = 0f;
 	
 	void OnCollisionEnter (Collision collision)
@@ -25,7 +25,6 @@ public class PlayerControl : MonoBehaviour
 				Vector3 oldVelocity = rigidbody.velocity;
 				rigidbody.velocity = oldVelocity + cp.normal * collision.relativeVelocity.magnitude * 2.0f;
 			}
-		
 	}
 
 	void OnTriggerEnter(Collider collider){
