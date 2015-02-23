@@ -70,39 +70,4 @@ public class TextureDetector : MonoBehaviour {
 		return maxIndex;
 	}
 
-	void OnCollisionStay(Collision collInfo)
-	{
-//		Debug.Log("TEST");
-		// validate coordinates first, check if there's a terrain beneath WorldPos
-		RaycastHit rayHit = new RaycastHit();
-		if (Physics.Raycast (transform.position, -transform.up, out rayHit))
-		{
-			if(rayHit.collider.gameObject.name != "Terrain")
-			{
-				return;
-			}
-		}
-		AdjustFriction ();
-	}
-
-	void AdjustFriction ()
-	{
-		surfaceIndex = GetMainTexture (transform.position);
-		switch (surfaceIndex) {
-		case (0):
-			//normal terrain, set normal friction
-			rigidbody.angularDrag = 3.0f;
-			break;
-		case (1):
-			//dry terrain, increase friction
-			rigidbody.angularDrag = 12.0f;
-			break;
-		case (2):
-			//lava, increase friction and do some damage
-			rigidbody.angularDrag = 24.0f;
-			break;
-		default:
-			break;
-		}
-	}
 }
