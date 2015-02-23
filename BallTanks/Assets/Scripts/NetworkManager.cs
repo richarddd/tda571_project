@@ -11,7 +11,7 @@ public class NetworkManager : Singleton<NetworkManager>
 		private HostData[] hostList;
 	
 		public GameObject playerPrefab;
-
+		public GameObject mainCamera;
 
 	
 	
@@ -40,6 +40,7 @@ public class NetworkManager : Singleton<NetworkManager>
 		{
 				Network.InitializeServer (4, 25000, !Network.HavePublicAddress ());
 				MasterServer.RegisterHost (typeName, gameName);
+
 		}
 	
 		void OnServerInitialized ()
@@ -81,7 +82,8 @@ public class NetworkManager : Singleton<NetworkManager>
 		{
 
 				GameObject.FindGameObjectWithTag ("Killzone").networkView.RPC ("PlayerJoined", RPCMode.AllBuffered);
+				
 				GameObject player = (GameObject)Network.Instantiate (playerPrefab, Vector3.up * 5, Quaternion.identity, 0);
 				//player.networkView.viewID;
-		}
+	}
 }
