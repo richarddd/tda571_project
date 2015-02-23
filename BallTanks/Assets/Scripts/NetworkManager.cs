@@ -12,6 +12,7 @@ public class NetworkManager : Singleton<NetworkManager>
 	
 		public GameObject playerPrefab;
 		public GameObject mainCamera;
+		public GameObject spawnPowerups;
 
 	
 	
@@ -46,6 +47,7 @@ public class NetworkManager : Singleton<NetworkManager>
 		void OnServerInitialized ()
 		{
 				SpawnPlayer ();
+				SpawnPowerupsManager ();
 		}
 	
 	
@@ -85,5 +87,11 @@ public class NetworkManager : Singleton<NetworkManager>
 				
 				GameObject player = (GameObject)Network.Instantiate (playerPrefab, Vector3.up * 5, Quaternion.identity, 0);
 				//player.networkView.viewID;
-	}
+		}
+		
+		private void SpawnPowerupsManager ()
+		{
+			Network.Instantiate (spawnPowerups, new Vector3(0,0,0) , Quaternion.identity, 0);
+
+		}
 }
