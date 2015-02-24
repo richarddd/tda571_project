@@ -20,7 +20,7 @@ public class SpawnPowerups: MonoBehaviour {
 			yield return new WaitForSeconds (spawnWait);
 			Vector3 spawnPosition = new Vector3(-1,4,5);
 			Quaternion spawnRotation = Quaternion.identity;
-			GameObject myPowerup = (GameObject) Network.Instantiate (powerup, spawnPosition, spawnRotation, 0);
+			Network.Instantiate (powerup, spawnPosition, spawnRotation, 0);
 		}
 	}
 
