@@ -10,8 +10,8 @@ public class WallControl : MonoBehaviour {
 			Network.Destroy(gameObject);
 			Network.Instantiate(explosion, transform.position, transform.rotation,0);
 		}
+	
 
-		
 	}
 
 }
