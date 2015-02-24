@@ -26,11 +26,7 @@ public class PlayerControlOffline : MonoBehaviour {
 		RaycastHit rayHit = new RaycastHit();
 		if (Physics.Raycast (transform.position, -transform.up, out rayHit))
 		{
-			if(rayHit.collider.gameObject.name != "Terrain")
-			{
-				return;
-			}
-			else
+			if(rayHit.collider.gameObject.name == "Terrain")
 			{
 				AdjustPhysicsByTerrain ();
 			}
