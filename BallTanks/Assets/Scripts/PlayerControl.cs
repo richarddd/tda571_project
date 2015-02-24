@@ -5,13 +5,15 @@ public class PlayerControl : MonoBehaviour
 {
 
 		//public float maxSpeed;
-
+		public float forceModifier = 500.0f;
 		private float lastSynchronizationTime = 0f;
 		private float syncDelay = 0f;
 		private float syncTime = 0f;
 		private Vector3 syncStartPosition = Vector3.zero;
 		private Vector3 syncVelocity = Vector3.zero;
 		private Vector3 syncEndPosition = Vector3.zero;
+		private Quaternion syncEndRotation = Quaternion.identity;
+		private Quaternion syncStartRotation = Quaternion.identity;
 
 		private bool playerIsFrozen = false;
 		public float frozenTimeInterval = 5;
@@ -36,15 +38,21 @@ public class PlayerControl : MonoBehaviour
 		void OnSerializeNetworkView (BitStream stream, NetworkMessageInfo info)
 		{
 				Vector3 syncPosition = Vector3.zero;
+				Quaternion syncRotation = Quaternion.identity;
 				if (stream.isWriting) {
+						syncRotation = rigidbody.rotation;
+						stream.Serialize (ref syncRotation);
+
 						syncPosition = rigidbody.position;
 						stream.Serialize (ref syncPosition);
 			
 						syncVelocity = rigidbody.velocity;
 						stream.Serialize (ref syncVelocity);
 				} else {
+						stream.Serialize (ref syncRotation);
 						stream.Serialize (ref syncPosition);
 						stream.Serialize (ref syncVelocity);
+						
 			
 						syncTime = 0f;
 						syncDelay = Time.time - lastSynchronizationTime;
@@ -53,6 +61,8 @@ public class PlayerControl : MonoBehaviour
 			
 						syncEndPosition = syncPosition + syncVelocity * syncDelay;
 						syncStartPosition = rigidbody.position;
+						syncEndRotation = syncRotation;
+						syncStartRotation = rigidbody.rotation;
 				}
 		}
 
@@ -89,21 +99,44 @@ public class PlayerControl : MonoBehaviour
 				}
 		}
 
-		private void InputMovement ()
-		{
-			float moveHorizontal = Input.GetAxis ("Horizontal");
-			float moveVertical = Input.GetAxis ("Vertical");
-			if (!playerIsFrozen) {
-						rigidbody.AddForce (Camera.main.transform.forward * moveVertical * 1000f * Time.deltaTime);
-						rigidbody.AddForce (Camera.main.transform.right * moveHorizontal * 1000f * Time.deltaTime);
+		private void InputMovement()
+	{
+		float moveSideways = Input.GetAxis("Horizontal");
+		float moveForward = Input.GetAxis ("Vertical");
+
+		if (!playerIsFrozen) {
+
+			// test if the player is actually standing over the terrain
+			RaycastHit rayHit = new RaycastHit();
+			if (Physics.Raycast (transform.position, -transform.up, out rayHit))
+			{
+				if(rayHit.collider.gameObject.name == "Terrain")
+				{
+					AdjustPhysicsByTerrain ();
 				}
+			}
 
+			// nudge the force position up by the diameter of the sphere to position it at the top,
+			// adding a rolling force to the top of sphere gives a more realistic result.
+			Vector3 forcePosition = transform.position + new Vector3 (0.0f, 0.5f, 0.0f);
+			Vector3 forceDirection = new Vector3 (Camera.main.transform.right.x * moveSideways, 0.0f, Camera.main.transform.forward.z * moveForward);
 
+			// normalize the direction so we get constant force in all directions
+			forceDirection.Normalize ();
+
+			// add a combined force with the calculated direction and position
+			rigidbody.AddForceAtPosition (forceDirection * forceModifier * Time.deltaTime, forcePosition);
+			Debug.DrawRay (forcePosition, forceDirection * forceModifier * Time.deltaTime);
 		}
+
+		// enable this to visualize the force position in real-time
+		
+	}
+
 
 		void OnCollisionStay (Collision collisionInfo)
 		{
-				rigidbody.velocity = rigidbody.velocity * 0.95f;
+				//rigidbody.velocity = rigidbody.velocity * 0.95f;
 
 		}
 		
@@ -113,7 +146,36 @@ public class PlayerControl : MonoBehaviour
 				syncTime += Time.deltaTime;
 				rigidbody.position = Vector3.Lerp (syncStartPosition, syncEndPosition, syncTime / syncDelay);
 				rigidbody.velocity = syncVelocity;
+				rigidbody.rotation = Quaternion.Slerp(syncStartRotation, syncEndRotation, syncTime / syncDelay);
 		}
+
+		void AdjustPhysicsByTerrain ()
+	{
+		// adjust force modifier and angular drag according to texture index
+		TextureDetector td = GetComponent<TextureDetector> ();
+		int texture = td.GetMainTexture (transform.position);
+		switch (texture) {
+		case 0:
+			//normal terrain, set normal friction
+			rigidbody.angularDrag = 5.0f;
+			forceModifier = 500.0f;
+			break;
+		case 1:
+			//dry terrain, increase friction
+			rigidbody.angularDrag = 12.0f;
+			forceModifier = 300.0f;
+			break;
+		case 2:
+			//lava, increase friction and do some damage
+			rigidbody.angularDrag = 24.0f;
+			forceModifier = 150.0f;
+			break;
+		default:
+			rigidbody.angularDrag = 1.0f;
+			forceModifier = 500.0f;
+			break;
+		}
+	}
 	
 
 

@@ -22,6 +22,9 @@ public class FixedCannon : MonoBehaviour
 
 		private LineRenderer lineRenderer;
 
+		public float fireRate = 1F;
+    	private float nextFire = 0.0F;
+
 		// Use this for initialization
 		void Start ()
 		{
@@ -43,6 +46,9 @@ public class FixedCannon : MonoBehaviour
 			Rigidbody shot = Instantiate (projectile, this.transform.position, this.transform.rotation) as Rigidbody;
 		//shot.AddForce (transform.TransformDirection(transform.forward) * shotForce * Time.deltaTime * -1);
 			shot.rigidbody.velocity = ((transform.position - transform.parent.position) * shotVelocity);
+			shotFired = true;
+			shotVelocity = 10f;
+			nextFire = Time.time + fireRate;
 		}
 
 		void OnSerializeNetworkView (BitStream stream, NetworkMessageInfo info)
@@ -66,13 +72,15 @@ public class FixedCannon : MonoBehaviour
 
 						shotVelocity = syncedShotVelocity;
 
+						Debug.Log(syncedShotVelocity);
+
 						//syncEndShotVelocity = syncedShotVelocity; //syncedShotVelocity *  * syncDelay;
 						//syncStartShotVelocity = rigidbody.position;
 			
 						if (isShooting) {
+							Debug.Log(shotVelocity);
 								FireShot ();
 								isShooting = false;
-								shotFired = false;
 						}
 				}
 		}
@@ -84,10 +92,8 @@ public class FixedCannon : MonoBehaviour
 					if (Input.GetButton ("Fire1") && (shotVelocity < maxShotVelocity)) {
 						shotVelocity += 0.1f;
 					}
-					if (Input.GetButtonUp ("Fire1")) {
-						FireShot ();
-						shotFired = true;
-						shotVelocity = 10f;
+					if (Input.GetButtonUp ("Fire1") && Time.time > nextFire) {
+						FireShot ();		
 					}
 				} else {
 					
