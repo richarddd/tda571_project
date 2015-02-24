@@ -16,11 +16,18 @@ public class FixedCannon : MonoBehaviour
 		private float lastSynchronizationTime = 0f;
 		private float syncDelay = 0f;
 		private float syncTime = 0f;
-		private PlayerControl playerControl; 
+
+		private float syncEndShotVelocity = 0f;
+		private float syncStartShotVelocity = 0f;
+
+		private LineRenderer lineRenderer;
+
+		public float fireRate = 1F;
+    	private float nextFire = 0.0F;
+
 		// Use this for initialization
 		void Start ()
 		{
-			playerControl = GameObject.Find ("Ball").GetComponent<PlayerControl>();
 				
 		}
 
@@ -28,23 +35,32 @@ public class FixedCannon : MonoBehaviour
 		{
 				lastSynchronizationTime = Time.time;
 				networkView.observed = this;
+				lineRenderer = GetComponent<LineRenderer>();
+				if(!networkView.isMine){
+					lineRenderer.enabled = false;
+				}
 		}
 
 		void FireShot ()
-		{	
-			if (! playerControl.isPlayerFrozen ()) {
-						Rigidbody shot = Instantiate (projectile, this.transform.position, this.transform.rotation) as Rigidbody;
-						//shot.AddForce (transform.TransformDirection(transform.forward) * shotForce * Time.deltaTime * -1);
-						shot.rigidbody.velocity = ((transform.position - transform.parent.position) * shotVelocity);
-				}
+		{
+			Rigidbody shot = Instantiate (projectile, this.transform.position, this.transform.rotation) as Rigidbody;
+		//shot.AddForce (transform.TransformDirection(transform.forward) * shotForce * Time.deltaTime * -1);
+			shot.GetComponent<Exploder>().setShooter(this.gameObject.transform.parent.gameObject);	
+			shot.rigidbody.velocity = ((transform.position - transform.parent.position) * shotVelocity);
+			shotFired = true;
+			shotVelocity = 10f;
+			nextFire = Time.time + fireRate;
 		}
 
 		void OnSerializeNetworkView (BitStream stream, NetworkMessageInfo info)
 		{
 				bool isShooting = false;
+				float syncedShotVelocity = 0f;
 				if (stream.isWriting) {
 						isShooting = shotFired;
+						syncedShotVelocity = shotVelocity;
 						stream.Serialize (ref isShooting);
+						stream.Serialize(ref syncedShotVelocity);
 						shotFired = false;
 				} else {
 						syncTime = 0f;
@@ -53,11 +69,19 @@ public class FixedCannon : MonoBehaviour
 
 			
 						stream.Serialize (ref isShooting);
+						stream.Serialize (ref syncedShotVelocity);
+
+						shotVelocity = syncedShotVelocity;
+
+						Debug.Log(syncedShotVelocity);
+
+						//syncEndShotVelocity = syncedShotVelocity; //syncedShotVelocity *  * syncDelay;
+						//syncStartShotVelocity = rigidbody.position;
 			
 						if (isShooting) {
+							Debug.Log(shotVelocity);
 								FireShot ();
 								isShooting = false;
-								shotFired = false;
 						}
 				}
 		}
@@ -66,13 +90,12 @@ public class FixedCannon : MonoBehaviour
 		void Update ()
 		{
 				if (networkView.isMine) {
-			if (Input.GetButton ("Fire1") && (shotVelocity < maxShotVelocity)) {
-				shotVelocity += 0.1f;
-			}
-			if (Input.GetButtonUp ("Fire1")) {
-				FireShot ();
-				shotVelocity = 10f;
-			}
+					if (Input.GetButton ("Fire1") && (shotVelocity < maxShotVelocity)) {
+						shotVelocity += 0.1f;
+					}
+					if (Input.GetButtonUp ("Fire1") && Time.time > nextFire) {
+						FireShot ();		
+					}
 				} else {
 					
 				}
@@ -80,8 +103,9 @@ public class FixedCannon : MonoBehaviour
 
 	void FixedUpdate()
 	{
-		
-		UpdateTrajectory (this.transform.position, (transform.position - transform.parent.position) * shotVelocity, Physics.gravity);
+		if(networkView.isMine){
+			UpdateTrajectory (this.transform.position, (transform.position - transform.parent.position) * shotVelocity, Physics.gravity);
+		}
 	}
 
 
@@ -89,8 +113,7 @@ public class FixedCannon : MonoBehaviour
 	{
 		int numSteps = 20; // for example
 		float timeDelta = 1.0f / initialVelocity.magnitude; // for example
-		
-		LineRenderer lineRenderer = GetComponent<LineRenderer>();
+	
 		lineRenderer.SetVertexCount(numSteps);
 		
 		Vector3 position = initialPosition;
