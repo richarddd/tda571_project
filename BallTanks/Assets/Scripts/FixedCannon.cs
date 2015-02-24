@@ -45,6 +45,7 @@ public class FixedCannon : MonoBehaviour
 		{
 			Rigidbody shot = Instantiate (projectile, this.transform.position, this.transform.rotation) as Rigidbody;
 		//shot.AddForce (transform.TransformDirection(transform.forward) * shotForce * Time.deltaTime * -1);
+			shot.GetComponent<Exploder>().setShooter(this.gameObject.transform.parent.gameObject);	
 			shot.rigidbody.velocity = ((transform.position - transform.parent.position) * shotVelocity);
 			shotFired = true;
 			shotVelocity = 10f;
