@@ -121,7 +121,6 @@ public class CameraController : MonoBehaviour {
 		center.x = player1X.position.x + (0.5f * (player2X.position.x - player1X.position.x));
 		center.z = player1Z.position.z + (0.5f * (player2Z.position.z - player1Z.position.z));
 		Vector3 temp= mainCamera.transform.position; 
-		center.z -= 2f;
 		temp.x= center.x;
 		temp.z += center.z- oldCenter.z;
 
@@ -130,8 +129,12 @@ public class CameraController : MonoBehaviour {
 		oldCenter = center;
 
 		distanceFromMiddlePoint = (mainCamera.transform.position - center).magnitude;
-		Camera.main.fieldOfView = 2.0f * Mathf.Rad2Deg * Mathf.Atan((0.5f * distanceBetweenPlayers) / (distanceFromMiddlePoint * aspectRatio));
-		mainCamera.camera.fieldOfView += 15f;
+
+		Camera.main.orthographicSize = distanceBetweenPlayers +0.5f;
+
+		//For perspective
+		//Camera.main.fieldOfView = 2.0f * Mathf.Rad2Deg * Mathf.Atan((0.5f * distanceBetweenPlayers) / (distanceFromMiddlePoint * aspectRatio));
+		//mainCamera.camera.fieldOfView += 0f;
 
 
 	}
