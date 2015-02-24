@@ -16,10 +16,11 @@ public class FixedCannon : MonoBehaviour
 		private float lastSynchronizationTime = 0f;
 		private float syncDelay = 0f;
 		private float syncTime = 0f;
-
+		private PlayerControl playerControl; 
 		// Use this for initialization
 		void Start ()
 		{
+			playerControl = GameObject.Find ("Ball").GetComponent<PlayerControl>();
 				
 		}
 
@@ -30,10 +31,12 @@ public class FixedCannon : MonoBehaviour
 		}
 
 		void FireShot ()
-		{
-		Rigidbody shot = Instantiate (projectile, this.transform.position, this.transform.rotation) as Rigidbody;
-		//shot.AddForce (transform.TransformDirection(transform.forward) * shotForce * Time.deltaTime * -1);
-		shot.rigidbody.velocity = ((transform.position - transform.parent.position) * shotVelocity);
+		{	
+			if (! playerControl.isPlayerFrozen ()) {
+						Rigidbody shot = Instantiate (projectile, this.transform.position, this.transform.rotation) as Rigidbody;
+						//shot.AddForce (transform.TransformDirection(transform.forward) * shotForce * Time.deltaTime * -1);
+						shot.rigidbody.velocity = ((transform.position - transform.parent.position) * shotVelocity);
+				}
 		}
 
 		void OnSerializeNetworkView (BitStream stream, NetworkMessageInfo info)

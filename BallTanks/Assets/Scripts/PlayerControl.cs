@@ -115,6 +115,8 @@ public class PlayerControl : MonoBehaviour
 				rigidbody.velocity = syncVelocity;
 		}
 	
-
+	public bool isPlayerFrozen(){
+		return playerIsFrozen;
+	}
 
 }
