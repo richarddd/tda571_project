@@ -6,6 +6,7 @@ public class PlayerControl : MonoBehaviour
 
 		//public float maxSpeed;
 		public float forceModifier = 500.0f;
+		public GameObject harmfulSphere;
 		private float lastSynchronizationTime = 0f;
 		private float syncDelay = 0f;
 		private float syncTime = 0f;
@@ -32,8 +33,13 @@ public class PlayerControl : MonoBehaviour
 	void OnTriggerEnter(Collider collider){
 		if (collider.gameObject.tag == "Powerup") {
 			playerIsFrozen = true;
+			//powerUpHarmPlayers(collider);
 		}
 	} 
+
+	void powerUpHarmPlayers (Collider collider){
+		Network.Instantiate(harmfulSphere, collider.transform.position, collider.transform.rotation,0);
+	}
 
 		void OnSerializeNetworkView (BitStream stream, NetworkMessageInfo info)
 		{
