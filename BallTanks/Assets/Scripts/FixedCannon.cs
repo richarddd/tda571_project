@@ -43,7 +43,7 @@ public class FixedCannon : MonoBehaviour
 		}
 
 		void FireShot ()
-	{	Debug.Log (playerControl.isPlayerFrozen());
+	{	
 			if (! playerControl.isPlayerFrozen ()) {
 
 				Rigidbody shot = Instantiate (projectile, this.transform.position, this.transform.rotation) as Rigidbody;
