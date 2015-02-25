@@ -24,11 +24,12 @@ public class FixedCannon : MonoBehaviour
 
 		public float fireRate = 1F;
     	private float nextFire = 0.0F;
+		private PlayerControl playerControl;
 
 		// Use this for initialization
 		void Start ()
 		{
-				
+			playerControl = GameObject.Find ("Ball").GetComponent<PlayerControl>();
 		}
 
 		void Awake ()
@@ -42,14 +43,17 @@ public class FixedCannon : MonoBehaviour
 		}
 
 		void FireShot ()
-		{
-			Rigidbody shot = Instantiate (projectile, this.transform.position, this.transform.rotation) as Rigidbody;
-		//shot.AddForce (transform.TransformDirection(transform.forward) * shotForce * Time.deltaTime * -1);
-			shot.GetComponent<Exploder>().setShooter(this.gameObject.transform.parent.gameObject);	
-			shot.rigidbody.velocity = ((transform.position - transform.parent.position) * shotVelocity);
-			shotFired = true;
-			shotVelocity = 10f;
-			nextFire = Time.time + fireRate;
+	{	Debug.Log (playerControl.isPlayerFrozen());
+			if (! playerControl.isPlayerFrozen ()) {
+
+				Rigidbody shot = Instantiate (projectile, this.transform.position, this.transform.rotation) as Rigidbody;
+				//shot.AddForce (transform.TransformDirection(transform.forward) * shotForce * Time.deltaTime * -1);
+				shot.GetComponent<Exploder> ().setShooter (this.gameObject.transform.parent.gameObject);	
+				shot.rigidbody.velocity = ((transform.position - transform.parent.position) * shotVelocity);
+				shotFired = true;
+				shotVelocity = 10f;
+				nextFire = Time.time + fireRate;
+			}
 		}
 
 		void OnSerializeNetworkView (BitStream stream, NetworkMessageInfo info)
