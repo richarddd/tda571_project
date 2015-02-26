@@ -29,12 +29,17 @@ public class PlayerControl : MonoBehaviour
 			}
 	}
 
+	//Here the powerups affect the player
 	void OnTriggerEnter(Collider collider){
 		if (collider.gameObject.tag == "Powerup") {
-			playerIsFrozen = true;
+			//Choose which powerup this is and call the function for that powerup
+			PowerupFreeze ();
 		}
 	} 
 
+	void PowerupFreeze(){
+		playerIsFrozen = true;
+	}
 		void OnSerializeNetworkView (BitStream stream, NetworkMessageInfo info)
 		{
 				Vector3 syncPosition = Vector3.zero;
