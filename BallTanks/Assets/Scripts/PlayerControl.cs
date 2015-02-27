@@ -33,6 +33,7 @@ public class PlayerControl : MonoBehaviour
 
 	void OnTriggerEnter(Collider collider){
 		if (collider.gameObject.tag == "Powerup") {
+			//Choose which powerup this is and call the function for that powerup
 			powerUpFreeze(collider);
 			//powerUpHarmPlayers(collider);
 		}
