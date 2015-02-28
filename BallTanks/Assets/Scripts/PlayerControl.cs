@@ -17,9 +17,11 @@ public class PlayerControl : MonoBehaviour
 	private Quaternion syncEndRotation = Quaternion.identity;
 	private Quaternion syncStartRotation = Quaternion.identity;
 
+	private bool powerupIsActive = false;
 	private bool playerIsFrozen = false;
-	public float frozenTimeInterval = 5;
+	public float powerupAffectingTime = 5;
 	private float timePassed = 0f;
+	private int currentPowerupNumber;
 	
 	void OnCollisionEnter (Collision collision)
 	{
@@ -33,11 +35,52 @@ public class PlayerControl : MonoBehaviour
 
 	void OnTriggerEnter(Collider collider){
 		if (collider.gameObject.tag == "Powerup") {
-			//Choose which powerup this is and call the function for that powerup
-			powerUpFreeze(collider);
-			//powerUpHarmPlayers(collider);
+			if(!powerupIsActive){
+				powerupIsActive = true;
+				decidePowerup(collider);
+			}
 		}
 	} 
+
+	void decidePowerup(Collider collider){
+		int number = Random.Range(1, 5);
+		currentPowerupNumber = number;
+		switch (number) {
+			case 1:
+				powerUpFreeze(collider);
+				break;
+			case 2:
+				powerUpHarmPlayers(collider);
+				break;
+			case 3:
+				powerUpShrink();
+				break;
+			case 4: 
+				powerUpGrow();
+				break;
+
+		}
+	}
+
+	void reversePowerup(){
+		switch (currentPowerupNumber) {
+		case 1:
+			powerUpUnfreeze(collider);
+			break;
+		case 2:
+			break;
+		case 3:
+			powerUpGrow();
+			break;
+		case 4:
+			powerUpShrink ();
+			break;
+		}
+	}
+
+	void powerUpShrink(){
+		transform.localScale += new Vector3(-0.5f, -0.5f, -0.5f);
+	}
 
 	void powerUpHarmPlayers (Collider collider){
 		Network.Instantiate(harmfulSphere, collider.transform.position, collider.transform.rotation,0);
@@ -47,6 +90,14 @@ public class PlayerControl : MonoBehaviour
 		playerIsFrozen = true;
 		GameObject freezPowerUp = (GameObject) Network.Instantiate(freezePartSysPrefab, collider.transform.position, collider.transform.rotation,0);
 		freezPowerUp.GetComponent<FreezePartSys> ().setFrozenPlayer (this.gameObject);
+	}
+
+	void powerUpGrow(){
+		transform.localScale += new Vector3(0.5f, 0.5f, 0.5f);
+	}
+
+	void powerUpUnfreeze(Collider collider){
+		playerIsFrozen = false;
 	}
 
 		void OnSerializeNetworkView (BitStream stream, NetworkMessageInfo info)
@@ -92,14 +143,24 @@ public class PlayerControl : MonoBehaviour
 				}
 		}
 		void Update(){
-			if (playerIsFrozen) {
-				timePassed += Time.deltaTime;
-				if(timePassed > frozenTimeInterval){
+
+			if (powerupIsActive) {
+			timePassed += Time.deltaTime;
+				if(isItTime(powerupAffectingTime,timePassed)){
 					timePassed = 0f;
-					playerIsFrozen = false;
+					reversePowerup();
+					powerupIsActive = false;
 				}
 			}
 			
+		}
+
+		bool isItTime(float threshold, float timePassed){
+			if (timePassed > threshold) {
+					return true;	
+			} else {
+				return false;
+			}
 		}
 	
 		void FixedUpdate ()
