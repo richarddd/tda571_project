@@ -5,19 +5,21 @@ public class PlayerControl : MonoBehaviour
 {
 
 		//public float maxSpeed;
-		public float forceModifier = 500.0f;
-		private float lastSynchronizationTime = 0f;
-		private float syncDelay = 0f;
-		private float syncTime = 0f;
-		private Vector3 syncStartPosition = Vector3.zero;
-		private Vector3 syncVelocity = Vector3.zero;
-		private Vector3 syncEndPosition = Vector3.zero;
-		private Quaternion syncEndRotation = Quaternion.identity;
-		private Quaternion syncStartRotation = Quaternion.identity;
+	public float forceModifier = 500.0f;
+	public GameObject harmfulSphere;
+	public GameObject freezePartSysPrefab;
+	private float lastSynchronizationTime = 0f;
+	private float syncDelay = 0f;
+	private float syncTime = 0f;
+	private Vector3 syncStartPosition = Vector3.zero;
+	private Vector3 syncVelocity = Vector3.zero;
+	private Vector3 syncEndPosition = Vector3.zero;
+	private Quaternion syncEndRotation = Quaternion.identity;
+	private Quaternion syncStartRotation = Quaternion.identity;
 
-		private bool playerIsFrozen = false;
-		public float frozenTimeInterval = 5;
-		private float timePassed = 0f;
+	private bool playerIsFrozen = false;
+	public float frozenTimeInterval = 5;
+	private float timePassed = 0f;
 	
 	void OnCollisionEnter (Collision collision)
 	{
@@ -31,9 +33,21 @@ public class PlayerControl : MonoBehaviour
 
 	void OnTriggerEnter(Collider collider){
 		if (collider.gameObject.tag == "Powerup") {
-			playerIsFrozen = true;
+			//Choose which powerup this is and call the function for that powerup
+			powerUpFreeze(collider);
+			//powerUpHarmPlayers(collider);
 		}
 	} 
+
+	void powerUpHarmPlayers (Collider collider){
+		Network.Instantiate(harmfulSphere, collider.transform.position, collider.transform.rotation,0);
+	}
+
+	void powerUpFreeze(Collider collider){
+		playerIsFrozen = true;
+		GameObject freezPowerUp = (GameObject) Network.Instantiate(freezePartSysPrefab, collider.transform.position, collider.transform.rotation,0);
+		freezPowerUp.GetComponent<FreezePartSys> ().setFrozenPlayer (this.gameObject);
+	}
 
 		void OnSerializeNetworkView (BitStream stream, NetworkMessageInfo info)
 		{

@@ -129,8 +129,17 @@ public class CameraController : MonoBehaviour {
 		oldCenter = center;
 
 		distanceFromMiddlePoint = (mainCamera.transform.position - center).magnitude;
+		//TODO LOOK HERE
+		//Log zoom
+		Camera.main.orthographicSize = Mathf.Log(distanceBetweenPlayers*50f);
 
-		Camera.main.orthographicSize = distanceBetweenPlayers +0.5f;
+		//Exp zoom
+		//Camera.main.orthographicSize = Mathf.Exp(distanceBetweenPlayers*0.15f);
+
+		//Linear zoom
+		//Camera.main.orthographicSize = distanceBetweenPlayers +0.5f;
+
+		//******* TO HERE
 
 		//For perspective
 		//Camera.main.fieldOfView = 2.0f * Mathf.Rad2Deg * Mathf.Atan((0.5f * distanceBetweenPlayers) / (distanceFromMiddlePoint * aspectRatio));
