@@ -29,7 +29,7 @@ public class FixedCannon : MonoBehaviour
 		// Use this for initialization
 		void Start ()
 		{
-			playerControl = GameObject.Find ("Ball").GetComponent<PlayerControl>();
+			playerControl = transform.parent.GetComponent<PlayerControl>();
 		}
 
 		void Awake ()
