@@ -30,6 +30,7 @@ public class PlayerControl : MonoBehaviour
 				ContactPoint cp = collision.contacts [0];
 				Vector3 oldVelocity = rigidbody.velocity;
 				rigidbody.velocity = oldVelocity + cp.normal * collision.relativeVelocity.magnitude * 1.0f;
+				audio.Play();
 			}
 	}
 
