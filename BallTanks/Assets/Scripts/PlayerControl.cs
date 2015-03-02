@@ -8,6 +8,8 @@ public class PlayerControl : MonoBehaviour
 	public float forceModifier = 500.0f;
 	public GameObject harmfulSphere;
 	public GameObject freezePartSysPrefab;
+	public GameObject freezeBreakPrefab;
+	private Color myColor;
 	private float lastSynchronizationTime = 0f;
 	private float syncDelay = 0f;
 	private float syncTime = 0f;
@@ -66,7 +68,7 @@ public class PlayerControl : MonoBehaviour
 	void reversePowerup(){
 		switch (currentPowerupNumber) {
 		case 1:
-			powerUpUnfreeze(collider);
+			powerUpUnfreeze();
 			break;
 		case 2:
 			break;
@@ -91,14 +93,19 @@ public class PlayerControl : MonoBehaviour
 		playerIsFrozen = true;
 		GameObject freezPowerUp = (GameObject) Network.Instantiate(freezePartSysPrefab, collider.transform.position, collider.transform.rotation,0);
 		freezPowerUp.GetComponent<FreezePartSys> ().setFrozenPlayer (this.gameObject);
+		myColor = renderer.material.GetColor ("_Color");
+		renderer.material.color = new Color (0.6f, 0.6f, 1.0f, 0.6f);
 	}
 
 	void powerUpGrow(){
 		transform.localScale += new Vector3(0.5f, 0.5f, 0.5f);
 	}
 
-	void powerUpUnfreeze(Collider collider){
+	void powerUpUnfreeze(){
 		playerIsFrozen = false;
+		Network.Instantiate(freezeBreakPrefab, transform.position, Quaternion.identity,0);
+		renderer.material.color = myColor;
+
 	}
 
 		void OnSerializeNetworkView (BitStream stream, NetworkMessageInfo info)
