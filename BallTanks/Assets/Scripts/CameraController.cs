@@ -57,7 +57,8 @@ public class CameraController : MonoBehaviour {
 					maxX = 0;
 				}else if (activePlayers.Length ==1){
 					playerWithMinX =activePlayers[minXIndex];
-					calculateSinglePlayerCamera ();
+					//calculateSinglePlayerCamera ();
+				updateCameraSinglePlayer();
 				}
 
 			if(maxZIndex != minZIndex){
@@ -68,7 +69,8 @@ public class CameraController : MonoBehaviour {
 			}
 //			Debug.Log(activePlayers.Length);
 				if (activePlayers.Length > 1 && networkView.isMine) {
-					calculateCameraPos ();
+					//calculateCameraPos ();
+					updateCamera();
 				} 
 			}	
 		}
@@ -108,6 +110,23 @@ public class CameraController : MonoBehaviour {
 		}	
 	}
 
+	void updateCamera()
+	{
+		player1X = playerWithMaxX.transform;
+		player2X = playerWithMinX.transform;
+		player1Z = playerWithMaxZ.transform;
+		player2Z = playerWithMinZ.transform;
+		
+		
+		calculateDistanceBetweenPlayers ();
+		
+		center.x = player1X.position.x + (0.5f * (player2X.position.x - player1X.position.x));
+		center.z = player1Z.position.z + (0.5f * (player2Z.position.z - player1Z.position.z));
+		center.y = player1X.position.y;
+
+		mainCamera.transform.LookAt (new Vector3(center.x, center.y, center.z));
+	}
+
 	void calculateCameraPos()
 	{
 		player1X = playerWithMaxX.transform;
@@ -121,7 +140,7 @@ public class CameraController : MonoBehaviour {
 		center.x = player1X.position.x + (0.5f * (player2X.position.x - player1X.position.x));
 		center.z = player1Z.position.z + (0.5f * (player2Z.position.z - player1Z.position.z));
 		Vector3 temp= mainCamera.transform.position; 
-		temp.x= center.x;
+		temp.x = center.x - oldCenter.x;
 		temp.z += center.z- oldCenter.z;
 
 		
@@ -164,6 +183,13 @@ public class CameraController : MonoBehaviour {
 
 		}
 
+	}
+
+	void updateCameraSinglePlayer()
+	{
+		center = playerWithMinX.transform.position;
+		
+		mainCamera.transform.LookAt (center);
 	}
 
 	void calculateSinglePlayerCamera(){

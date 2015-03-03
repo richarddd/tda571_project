@@ -203,6 +203,8 @@ public class PlayerControl : MonoBehaviour
 			// adding a rolling force to the top of sphere gives a more realistic result.
 			Vector3 forcePosition = transform.position + new Vector3 (0.0f, 0.5f, 0.0f);
 			Vector3 forceDirection = new Vector3 (Camera.main.transform.right.x * moveSideways, 0.0f, Camera.main.transform.forward.z * moveForward);
+			forceDirection= Camera.main.transform.TransformVector(forceDirection);
+			forceDirection.y = 0;
 
 			// normalize the direction so we get constant force in all directions
 			forceDirection.Normalize ();

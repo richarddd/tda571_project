@@ -1,15 +1,18 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\CannonController.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\CameraController.cs">
     <Files>
-      <File FileName="Assets\Scripts\CannonController.cs" Line="94" Column="1" />
+      <File FileName="Assets\Scripts\CameraController.cs" Line="61" Column="32" />
+      <File FileName="Assets\Scripts\SpawnPowerups.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\CannonController.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\PlayerLife.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\NetworkManager.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Killing.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\PlayerControl.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Exploder.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PlayerControl.cs" Line="207" Column="25" />
+      <File FileName="Assets\Scripts\Exploder.cs" Line="40" Column="31" />
       <File FileName="Assets\Scripts\PlayerControlOffline.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\TextureDetector.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\FixedCannon.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
