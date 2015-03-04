@@ -34,6 +34,7 @@ public class FixedCannon : MonoBehaviour
 
 		void Awake ()
 		{
+			nextFire = Time.time+1f;
 				lastSynchronizationTime = Time.time;
 				networkView.observed = this;
 				lineRenderer = GetComponent<LineRenderer>();
