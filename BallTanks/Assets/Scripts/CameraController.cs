@@ -17,6 +17,9 @@ public class CameraController : MonoBehaviour {
 	float maxZ =0;
 	float minZ=0;
 
+	float newZoom=0f;
+	float oldTime=0f;
+
 	GameObject playerWithMaxX;
 	GameObject playerWithMinX;
 	GameObject playerWithMaxZ;
@@ -127,6 +130,12 @@ public class CameraController : MonoBehaviour {
 		
 		mainCamera.transform.position = temp;
 		oldCenter = center;
+		if (Time.time -oldTime > 0.1) {
+			newZoom=distanceBetweenPlayers;
+			oldTime = Time.time;
+
+		}
+
 
 		distanceFromMiddlePoint = (mainCamera.transform.position - center).magnitude;
 		//TODO LOOK HERE
@@ -140,8 +149,9 @@ public class CameraController : MonoBehaviour {
 		//Camera.main.orthographicSize = Mathf.Exp(distanceBetweenPlayers*0.15f);
 
 		//Linear zoom
-		Camera.main.orthographicSize = distanceBetweenPlayers +0.5f;
-		Mathf.Clamp(Camera.main.orthographicSize, maxX, minX);
+		Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, newZoom, Time.deltaTime/2) ;
+
+		//Mathf.Clamp(Camera.main.orthographicSize, maxX, minX);
 		//******* TO HERE
 
 		//For perspective
