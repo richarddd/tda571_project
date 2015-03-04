@@ -131,14 +131,17 @@ public class CameraController : MonoBehaviour {
 		distanceFromMiddlePoint = (mainCamera.transform.position - center).magnitude;
 		//TODO LOOK HERE
 		//Log zoom
-		Camera.main.orthographicSize = Mathf.Log(distanceBetweenPlayers*50f);
+		//new Vector3(Mathf.Clamp(Time.time, maxX, minX), 0, 0);
+
+		//Camera.main.orthographicSize = Mathf.Log(distanceBetweenPlayers*50f);
+		//Mathf.Log(Mathf.Clamp(Camera.main.orthographicSize, maxX, minX));
 
 		//Exp zoom
 		//Camera.main.orthographicSize = Mathf.Exp(distanceBetweenPlayers*0.15f);
 
 		//Linear zoom
-		//Camera.main.orthographicSize = distanceBetweenPlayers +0.5f;
-
+		Camera.main.orthographicSize = distanceBetweenPlayers +0.5f;
+		Mathf.Clamp(Camera.main.orthographicSize, maxX, minX);
 		//******* TO HERE
 
 		//For perspective
