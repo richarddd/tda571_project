@@ -4,7 +4,11 @@ using System.Collections;
 public class SpawnPowerups: MonoBehaviour {
 	
 	public GameObject powerup;
-	//public GameObject emptyPowerup;
+	public GameObject powerupFreeze;
+	public GameObject powerupGrow;
+	public GameObject powerupShrink;
+	public GameObject powerupHarmfulSphere;
+
 
 	private float spawnWait;
 	public float nextPowerupMinWait;
