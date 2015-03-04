@@ -35,7 +35,6 @@ public class PlayerLife : MonoBehaviour {
 
 	[RPC]
 	void GameOver(){
-		Debug.Log ("WON");
 		canvas.transform.GetChild (7).gameObject.SetActive (true);
 		canvas.transform.GetChild (9).gameObject.SetActive (true);
 		canvas.transform.GetChild (10).gameObject.SetActive (true);

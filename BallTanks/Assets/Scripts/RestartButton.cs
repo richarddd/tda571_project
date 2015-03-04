@@ -14,6 +14,14 @@ public class RestartButton : MonoBehaviour {
 	}
 	public void Restart(){
 		Network.Disconnect ();
-		Application.LoadLevel(0);
+		int levelNumber = Application.loadedLevel + 1;
+		if (levelNumber < Application.levelCount) {
+			Debug.Log("IN");	
+			Application.LoadLevel(levelNumber);
+		}
+		else{
+			Application.LoadLevel(0);
+		}
+
 	}
 }
