@@ -15,17 +15,41 @@ public class SpawnPowerups: MonoBehaviour {
 	public float nextPowerupMaxWait;
 	
 	void Start(){
-		StartCoroutine (SpawnPowerUp ());
+		StartCoroutine (GeneratePowerUps ());
 	}
 	
-	IEnumerator SpawnPowerUp(){
+	IEnumerator GeneratePowerUps(){
 		while (true) {
 			spawnWait = Random.Range (nextPowerupMinWait, nextPowerupMaxWait);
 			yield return new WaitForSeconds (spawnWait);
-			Vector3 spawnPosition = new Vector3(-1,4,5);
-			Quaternion spawnRotation = Quaternion.identity;
-			Network.Instantiate (powerup, spawnPosition, spawnRotation, 0);
+			decidePowerup();
 		}
 	}
+
+	void decidePowerup(){
+		int number = Random.Range(1, 5);
+		switch (number) {
+		case 1:
+			Spawn(powerupFreeze);
+			break;
+		case 2:
+			Spawn(powerupHarmfulSphere);
+			break;
+		case 3:
+			Spawn(powerupGrow);
+			break;
+		case 4: 
+			Spawn(powerupShrink);
+			break;
+			
+		}
+	}
+
+	void Spawn(GameObject powerup){
+		Vector3 spawnPosition = new Vector3(-1,4,5);
+		Quaternion spawnRotation = Quaternion.identity;
+		Network.Instantiate (powerup, spawnPosition, spawnRotation, 0);
+	}
+
 
 }
