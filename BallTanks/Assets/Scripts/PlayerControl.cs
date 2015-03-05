@@ -6,7 +6,7 @@ public class PlayerControl : MonoBehaviour
 	public float forceModifier = 500.0f;
 	public GameObject harmfulSphere;
 	public GameObject freezePartSysPrefab;
-	public GameObject freezeBreakPrefab;
+	public GameObject freezePowerupBreakingAudio;
 	private Color myColor;
 	private float lastSynchronizationTime = 0f;
 	private float syncDelay = 0f;
@@ -94,7 +94,7 @@ public class PlayerControl : MonoBehaviour
 
 	void powerUpUnfreeze(){
 		playerIsFrozen = false;
-		Network.Instantiate(freezeBreakPrefab, transform.position, Quaternion.identity,0);
+		Network.Instantiate(freezePowerupBreakingAudio, transform.position, Quaternion.identity,0);
 		renderer.material.color = myColor;
 
 	}
