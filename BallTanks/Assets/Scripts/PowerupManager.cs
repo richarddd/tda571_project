@@ -21,22 +21,10 @@ public class PowerupManager : MonoBehaviour {
 	void OnTriggerEnter (Collider collider) {
 		if (collider.gameObject.tag == "Player") {
 			Network.Instantiate(myAudio, transform.position, transform.rotation,0);
+			//Network.RemoveRPCs(networkView.viewID); 
 			Network.Destroy(gameObject);
-			//networkView.RPC ("RPCDestroy", RPCMode.AllBuffered);
 		}
 	}
-
-	/*[RPC] 
-	void RPCDestroy() {
-		Debug.Log ("this viewID: " + this.gameObject.transform.networkView.viewID); 
-		Network.RemoveRPCs(this.gameObject.transform.networkView.viewID); 
-		Network.Destroy(this.gameObject);
-	}*/
-
-	/*void OnDrawGizmosSelected() {
-		Gizmos.color = Color.red;
-		Gizmos.DrawSphere(transform.position, 0.3f);
-	}*/
 
 
 	Vector3 getNewPosition(){

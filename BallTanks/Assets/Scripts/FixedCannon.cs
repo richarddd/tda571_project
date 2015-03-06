@@ -37,10 +37,6 @@ public class FixedCannon : MonoBehaviour
 			nextFire = Time.time + 1f;	
 			lastSynchronizationTime = Time.time;
 				networkView.observed = this;
-				lineRenderer = GetComponent<LineRenderer>();
-				if(!networkView.isMine){
-					lineRenderer.enabled = false;
-				}
 		}
 
 		void FireShot ()
@@ -108,14 +104,23 @@ public class FixedCannon : MonoBehaviour
 
 	void FixedUpdate()
 	{
-		if(networkView.isMine){
 			UpdateTrajectory (this.transform.position, (transform.position - transform.parent.position) * shotVelocity, Physics.gravity);
-		}
 	}
 
 
 	void UpdateTrajectory(Vector3 initialPosition, Vector3 initialVelocity, Vector3 gravity)
 	{
+		lineRenderer = GetComponent<LineRenderer>();
+		if (networkView.isMine) {
+						Material playerMat = new Material (Shader.Find ("Sprites/Default"));
+						playerMat.color = Color.green;
+						lineRenderer.material = playerMat;
+				} else {
+			Material playerMat = new Material(Shader.Find("Sprites/Default"));
+			playerMat.color = Color.red;
+			lineRenderer.material = playerMat;
+				}
+
 		int numSteps = 20; // for example
 		float timeDelta = 1.0f / initialVelocity.magnitude; // for example
 	

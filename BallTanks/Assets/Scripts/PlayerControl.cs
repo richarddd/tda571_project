@@ -3,12 +3,10 @@ using System.Collections;
 
 public class PlayerControl : MonoBehaviour
 {
-
-		//public float maxSpeed;
 	public float forceModifier = 500.0f;
 	public GameObject harmfulSphere;
 	public GameObject freezePartSysPrefab;
-	public GameObject freezeBreakPrefab;
+	public GameObject freezePowerupBreakingAudio;
 	private Color myColor;
 	private float lastSynchronizationTime = 0f;
 	private float syncDelay = 0f;
@@ -37,33 +35,26 @@ public class PlayerControl : MonoBehaviour
 	}
 
 	void OnTriggerEnter(Collider collider){
-		if (collider.gameObject.tag == "Powerup") {
-			if(!powerupIsActive){
-				powerupIsActive = true;
-				decidePowerup(collider);
+		if (!powerupIsActive) {
+			if (collider.gameObject.tag == "PowerupFreeze") {
+				powerUpFreeze (collider);
+				currentPowerupNumber = 1;
 			}
+			else if (collider.gameObject.tag == "PowerupHarmfulSphere") {
+				powerUpHarmPlayers (collider);
+				currentPowerupNumber = 2;
+			}
+			else if (collider.gameObject.tag == "PowerupGrow") {
+				powerUpGrow ();
+				currentPowerupNumber = 3;
+			}
+			else if (collider.gameObject.tag == "PowerupShrink") {
+				powerUpShrink ();
+				currentPowerupNumber = 4;
+			}
+			powerupIsActive = true;
 		}
 	} 
-
-	void decidePowerup(Collider collider){
-		int number = Random.Range(1, 5);
-		currentPowerupNumber = number;
-		switch (number) {
-			case 1:
-				powerUpFreeze(collider);
-				break;
-			case 2:
-				powerUpHarmPlayers(collider);
-				break;
-			case 3:
-				powerUpShrink();
-				break;
-			case 4: 
-				powerUpGrow();
-				break;
-
-		}
-	}
 
 	void reversePowerup(){
 		switch (currentPowerupNumber) {
@@ -73,10 +64,10 @@ public class PlayerControl : MonoBehaviour
 		case 2:
 			break;
 		case 3:
-			powerUpGrow();
+			powerUpShrink();
 			break;
 		case 4:
-			powerUpShrink ();
+			powerUpGrow ();
 			break;
 		}
 	}
@@ -103,7 +94,7 @@ public class PlayerControl : MonoBehaviour
 
 	void powerUpUnfreeze(){
 		playerIsFrozen = false;
-		Network.Instantiate(freezeBreakPrefab, transform.position, Quaternion.identity,0);
+		Network.Instantiate(freezePowerupBreakingAudio, transform.position, Quaternion.identity,0);
 		renderer.material.color = myColor;
 
 	}

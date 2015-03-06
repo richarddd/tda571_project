@@ -23,6 +23,14 @@ public class Killing : MonoBehaviour {
 
 	}
 
+	[RPC]
+	void PlayerLeft(){
+		noOfPlayers--;
+		Debug.Log ("Number of players " +noOfPlayers);	
+		
+		
+	}
+
 	void OnTriggerEnter(Collider colInfo){
 		GameObject playerToKill = colInfo.gameObject;
 		if (colInfo.tag == "Player" && colInfo.transform.parent.networkView.isMine) {
@@ -46,7 +54,7 @@ public class Killing : MonoBehaviour {
 				//colInfo.gameObject.transform.parent.GetChild(i).gameObject.SetActive(false);
 				colInfo.gameObject.transform.parent.gameObject.SetActive(false);
 			}
-				
+
 			canvas.transform.GetChild(5).gameObject.SetActive(true);
 			canvas.transform.GetChild(6).gameObject.SetActive(true);
 
@@ -64,6 +72,9 @@ public class Killing : MonoBehaviour {
 				//Destroy(colInfo.gameObject.transform.parent.GetChild(i).gameObject);
 				Destroy(colInfo.gameObject.transform.parent.gameObject);
 			}
+
+			canvas.transform.GetChild (9).gameObject.SetActive (true);
+			canvas.transform.GetChild (10).gameObject.SetActive (true);
 				
 			noOfPlayers--;
 				
