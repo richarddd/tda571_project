@@ -21,6 +21,8 @@ public class PlayerHealthBar : MonoBehaviour {
 	void Start () {
 		player = transform.gameObject;
 		killZone= GameObject.FindGameObjectWithTag("Killzone");
+
+
 			
 		currentHealth = 100;
 			
@@ -49,6 +51,24 @@ public class PlayerHealthBar : MonoBehaviour {
 		}
 		emptyBarTex.Apply();
 			
+	}
+
+	void Awake ()
+	{
+		networkView.observed = this;
+	}
+
+	void OnSerializeNetworkView (BitStream stream, NetworkMessageInfo info)
+	{
+		int syncedHealth = 0;
+		if(stream.isWriting){
+			syncedHealth = currentHealth;
+			stream.Serialize (ref syncedHealth);
+		}else{
+			stream.Serialize (ref syncedHealth);
+			currentHealth = syncedHealth;
+		}
+
 	}
 		
 		// Update is called once per frame

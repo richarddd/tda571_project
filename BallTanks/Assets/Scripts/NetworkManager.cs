@@ -96,13 +96,14 @@ public class NetworkManager : Singleton<NetworkManager>
 
 				//GameObject.FindGameObjectWithTag ("Killzone").networkView.RPC ("PlayerJoined", RPCMode.AllBuffered);
 				
-				GameObject player = (GameObject)Network.Instantiate (playerPrefab, Vector3.up * 5, Quaternion.identity, 0);
+				GameObject player = (GameObject)Network.Instantiate (playerPrefab, new Vector3(Random.Range(-5,5),5,Random.Range(-5,5)), Quaternion.identity, 0);
 				//player.networkView.viewID;
 		}
 		
 		private void SpawnPowerupsManager ()
 		{
-			Network.Instantiate (spawnPowerups, new Vector3(0,0,0) , Quaternion.identity, 0);
+
+			Instantiate (spawnPowerups, new Vector3(0,0,0) , Quaternion.identity);
 
 		}
 }

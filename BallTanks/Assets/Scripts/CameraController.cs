@@ -70,7 +70,7 @@ public class CameraController : MonoBehaviour {
 				maxZ = 0;
 			}
 //			Debug.Log(activePlayers.Length);
-				if (activePlayers.Length > 1 && networkView.isMine) {
+				if (activePlayers.Length > 1) {
 					calculateCameraPos ();
 				} 
 			}	
