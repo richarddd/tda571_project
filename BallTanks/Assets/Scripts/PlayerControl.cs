@@ -7,6 +7,7 @@ public class PlayerControl : MonoBehaviour
 	public GameObject harmfulSphere;
 	public GameObject freezePartSysPrefab;
 	public GameObject freezePowerupBreakingAudio;
+
 	private Color myColor;
 	private float lastSynchronizationTime = 0f;
 	private float syncDelay = 0f;
@@ -30,7 +31,10 @@ public class PlayerControl : MonoBehaviour
 				ContactPoint cp = collision.contacts [0];
 				Vector3 oldVelocity = rigidbody.velocity;
 				rigidbody.velocity = oldVelocity + cp.normal * collision.relativeVelocity.magnitude * 1.0f;
-				audio.Play();
+				if (collision.gameObject.tag == "Player"){
+						audio.Play ();
+				}
+
 			}
 	}
 
