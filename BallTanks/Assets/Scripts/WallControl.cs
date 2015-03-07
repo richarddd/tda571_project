@@ -10,8 +10,13 @@ public class WallControl : MonoBehaviour {
 			Network.Destroy(gameObject);
 			Network.Instantiate(explosion, transform.position, transform.rotation,0);
 		}
-	
-
 	}
 
+	void OnTriggerEnter(Collider collider)
+	{
+		if(collider.gameObject.tag == "Killzone")
+		{
+			Network.Destroy(gameObject);
+		}
+	}
 }
