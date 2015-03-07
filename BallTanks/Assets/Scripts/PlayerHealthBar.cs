@@ -112,11 +112,24 @@ public class PlayerHealthBar : MonoBehaviour {
 		//Increment health by given value
 	public void incrementHealth(int value) {
 		currentHealth += value;
+		StartCoroutine(blinkPlayerColor (0.1f, Color.green));
 	}
 		
 		//Decrement health by given value
 	public void decrementHealth(int value) {
 		currentHealth -= value;
+		StartCoroutine(blinkPlayerColor (0.1f, Color.red));
+	}
+
+	public IEnumerator blinkPlayerColor(float time, Color color)
+	{
+		for (int i = 0; i < 5; i++) 
+		{
+			gameObject.transform.GetChild (0).renderer.material.color = color;
+			yield return new WaitForSeconds (time);
+			gameObject.transform.GetChild (0).renderer.material.color = Color.white;
+			yield return new WaitForSeconds (time);
+		}
 	}
 		
 
