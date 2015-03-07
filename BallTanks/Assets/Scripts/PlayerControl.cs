@@ -228,32 +228,22 @@ public class PlayerControl : MonoBehaviour
 		}
 
 		void AdjustPhysicsByTerrain ()
-	{
-		// adjust force modifier and angular drag according to texture index
-		TextureDetector td = GetComponent<TextureDetector> ();
-		int texture = td.GetMainTexture (transform.position);
-		switch (texture) {
-		case 0:
-			//normal terrain, set normal friction
-			rigidbody.angularDrag = 5.0f;
-			forceModifier = 500.0f;
-			break;
-		case 1:
-			//dry terrain, increase friction
-			rigidbody.angularDrag = 12.0f;
-			forceModifier = 300.0f;
-			break;
-		case 2:
-			//lava, increase friction and do some damage
-			rigidbody.angularDrag = 24.0f;
-			forceModifier = 150.0f;
-			break;
-		default:
-			rigidbody.angularDrag = 1.0f;
-			forceModifier = 500.0f;
-			break;
+		{
+			// adjust force modifier and angular drag according to texture index
+			TextureDetector td = GetComponent<TextureDetector> ();
+			int texture = td.GetMainTexture (transform.position);
+			switch (texture) {
+			case 4:
+				//lava, increase friction and do some damage
+				rigidbody.angularDrag = 8.0f;
+				forceModifier = 350.0f;
+				break;
+			default:
+				rigidbody.angularDrag = 5.0f;
+				forceModifier = 500.0f;
+				break;
+			}
 		}
-	}
 	
 	public bool isPlayerFrozen(){
 		return playerIsFrozen;
