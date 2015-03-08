@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class Killing : MonoBehaviour {
 	private GameObject canvas;
+	public GameObject ParticleEffect;
 	private int noOfPlayers=0;
 	// Use this for initialization
 	void Start () {
@@ -34,6 +35,8 @@ public class Killing : MonoBehaviour {
 	void OnTriggerEnter(Collider colInfo){
 		GameObject playerToKill = colInfo.gameObject;
 		if (colInfo.tag == "Player" && colInfo.transform.parent.networkView.isMine) {
+			Network.Instantiate(ParticleEffect, colInfo.transform.position, colInfo.transform.rotation,0);
+			audio.Play();
 			Kill (playerToKill);
 		}
 	}
@@ -96,6 +99,7 @@ public class Killing : MonoBehaviour {
 		}
 		colInfo.rigidbody.velocity = Vector3.zero;
 		colInfo.transform.position = new Vector3(0,5,0);
+		colInfo.renderer.material.color = Color.white;
 
 		//Gui stuff
 		canvas.transform.GetChild(5).gameObject.SetActive(false);

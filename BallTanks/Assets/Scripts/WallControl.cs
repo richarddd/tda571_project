@@ -10,8 +10,13 @@ public class WallControl : MonoBehaviour {
 			Destroy(gameObject);
 			Instantiate(explosion, transform.position, transform.rotation);
 		}
-	
-
 	}
 
+	void OnTriggerEnter(Collider collider)
+	{
+		if(collider.gameObject.tag == "Killzone")
+		{
+			Destroy(gameObject);
+		}
+	}
 }

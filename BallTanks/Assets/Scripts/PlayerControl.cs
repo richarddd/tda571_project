@@ -7,6 +7,7 @@ public class PlayerControl : MonoBehaviour
 	public GameObject harmfulSphere;
 	public GameObject freezePartSysPrefab;
 	public GameObject freezePowerupBreakingAudio;
+
 	private Color myColor;
 	private float lastSynchronizationTime = 0f;
 	private float syncDelay = 0f;
@@ -22,7 +23,10 @@ public class PlayerControl : MonoBehaviour
 	public float powerupAffectingTime = 5;
 	private float timePassed = 0f;
 	private int currentPowerupNumber;
-	
+
+	private const float lavaDamageInterval = 0.02f;
+	private float lavaTimePassed = 0.0f;
+
 	void OnCollisionEnter (Collision collision)
 	{
 			if (collision.gameObject.tag == "Wall" || collision.gameObject.tag == "Player") {
@@ -30,7 +34,10 @@ public class PlayerControl : MonoBehaviour
 				ContactPoint cp = collision.contacts [0];
 				Vector3 oldVelocity = rigidbody.velocity;
 				rigidbody.velocity = oldVelocity + cp.normal * collision.relativeVelocity.magnitude * 1.0f;
-				audio.Play();
+				if (collision.gameObject.tag == "Player"){
+						audio.Play ();
+				}
+
 			}
 	}
 
@@ -152,6 +159,19 @@ public class PlayerControl : MonoBehaviour
 					powerupIsActive = false;
 				}
 			}
+
+
+			// test if the player is actually standing over the terrain
+			RaycastHit rayHit = new RaycastHit ();
+			if (Physics.Raycast (transform.position, new Vector3(0,-1,0), out rayHit)) {
+				if (rayHit.collider.gameObject.name == "Terrain") {
+					try {
+						AdjustPhysicsByTerrain ();
+					} catch (System.Exception ex) {
+						
+					}			
+				}
+			}
 			
 		}
 
@@ -175,38 +195,26 @@ public class PlayerControl : MonoBehaviour
 		}
 
 		private void InputMovement()
-	{
-		float moveSideways = Input.GetAxis("Horizontal");
-		float moveForward = Input.GetAxis ("Vertical");
+		{
+			float moveSideways = Input.GetAxis("Horizontal");
+			float moveForward = Input.GetAxis ("Vertical");
 
-		if (!playerIsFrozen) {
+			if (!playerIsFrozen) {
+				// nudge the force position up by the diameter of the sphere to position it at the top,
+				// adding a rolling force to the top of sphere gives a more realistic result.
+				Vector3 forcePosition = transform.position + new Vector3 (0.0f, 0.5f, 0.0f);
+				Vector3 forceDirection = new Vector3 (Camera.main.transform.right.x * moveSideways, 0.0f, Camera.main.transform.forward.z * moveForward);
 
-			// test if the player is actually standing over the terrain
-			RaycastHit rayHit = new RaycastHit();
-			if (Physics.Raycast (transform.position, -transform.up, out rayHit))
-			{
-				if(rayHit.collider.gameObject.name == "Terrain")
-				{
-					AdjustPhysicsByTerrain ();
-				}
+				// normalize the direction so we get constant force in all directions
+				forceDirection.Normalize ();
+
+				// add a combined force with the calculated direction and position
+				rigidbody.AddForceAtPosition (forceDirection * forceModifier * Time.deltaTime, forcePosition);
+				// enable this to visualize the force position in real-time
+				Debug.DrawRay (forcePosition, forceDirection * forceModifier * Time.deltaTime);
 			}
-
-			// nudge the force position up by the diameter of the sphere to position it at the top,
-			// adding a rolling force to the top of sphere gives a more realistic result.
-			Vector3 forcePosition = transform.position + new Vector3 (0.0f, 0.5f, 0.0f);
-			Vector3 forceDirection = new Vector3 (Camera.main.transform.right.x * moveSideways, 0.0f, Camera.main.transform.forward.z * moveForward);
-
-			// normalize the direction so we get constant force in all directions
-			forceDirection.Normalize ();
-
-			// add a combined force with the calculated direction and position
-			rigidbody.AddForceAtPosition (forceDirection * forceModifier * Time.deltaTime, forcePosition);
-			Debug.DrawRay (forcePosition, forceDirection * forceModifier * Time.deltaTime);
+			
 		}
-
-		// enable this to visualize the force position in real-time
-		
-	}
 
 
 		void OnCollisionStay (Collision collisionInfo)
@@ -225,32 +233,29 @@ public class PlayerControl : MonoBehaviour
 		}
 
 		void AdjustPhysicsByTerrain ()
-	{
-		// adjust force modifier and angular drag according to texture index
-		TextureDetector td = GetComponent<TextureDetector> ();
-		int texture = td.GetMainTexture (transform.position);
-		switch (texture) {
-		case 0:
-			//normal terrain, set normal friction
-			rigidbody.angularDrag = 5.0f;
-			forceModifier = 500.0f;
-			break;
-		case 1:
-			//dry terrain, increase friction
-			rigidbody.angularDrag = 12.0f;
-			forceModifier = 300.0f;
-			break;
-		case 2:
-			//lava, increase friction and do some damage
-			rigidbody.angularDrag = 24.0f;
-			forceModifier = 150.0f;
-			break;
-		default:
-			rigidbody.angularDrag = 1.0f;
-			forceModifier = 500.0f;
-			break;
+		{
+			// adjust force modifier and angular drag according to texture index
+			TextureDetector td = GetComponent<TextureDetector> ();
+			int texture = td.GetMainTexture (transform.position);
+			switch (texture) {
+			case 4:
+				//lava, increase friction and do some damage
+				rigidbody.angularDrag = 8.0f;
+				forceModifier = 350.0f;
+				PlayerHealthBar playerHealthBar = GetComponentInParent<PlayerHealthBar>();
+				lavaTimePassed += Time.deltaTime;
+				if (lavaTimePassed >= lavaDamageInterval) {
+					lavaTimePassed = 0.0f;
+					playerHealthBar.decrementHealth(1);
+				}
+				break;
+			default:
+				rigidbody.angularDrag = 5.0f;
+				forceModifier = 500.0f;
+				lavaTimePassed = 0.0f;
+				break;
+			}
 		}
-	}
 	
 	public bool isPlayerFrozen(){
 		return playerIsFrozen;
