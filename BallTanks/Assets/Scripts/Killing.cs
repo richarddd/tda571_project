@@ -99,6 +99,7 @@ public class Killing : MonoBehaviour {
 		}
 		colInfo.rigidbody.velocity = Vector3.zero;
 		colInfo.transform.position = new Vector3(0,5,0);
+		colInfo.renderer.material.color = Color.white;
 
 		//Gui stuff
 		canvas.transform.GetChild(5).gameObject.SetActive(false);
