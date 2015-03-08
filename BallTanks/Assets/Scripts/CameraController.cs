@@ -49,7 +49,7 @@ public class CameraController : MonoBehaviour {
 			
 			activePlayers = GameObject.FindGameObjectsWithTag ("Player");
 
-			if (activePlayers != null) {
+			if (activePlayers.Length > 0) {
 				//Calculates how much the camera should zoom in the x-axis
 				calculateMaxAndMinX();
 						

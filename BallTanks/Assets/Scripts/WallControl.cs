@@ -7,8 +7,8 @@ public class WallControl : MonoBehaviour {
 
 	void OnCollisionEnter(Collision collision){
 		if (collision.gameObject.tag == "Player" || collision.gameObject.tag == "Projectile") {
-			Network.Destroy(gameObject);
-			Network.Instantiate(explosion, transform.position, transform.rotation,0);
+			Destroy(gameObject);
+			Instantiate(explosion, transform.position, transform.rotation);
 		}
 	
 

@@ -19,7 +19,7 @@ public class PowerupManager : MonoBehaviour {
 	}
 
 	void OnTriggerEnter (Collider collider) {
-		if (collider.gameObject.tag == "Player") {
+		if (collider.gameObject.tag == "Player" && networkView.isMine) {
 			Network.Instantiate(myAudio, transform.position, transform.rotation,0);
 			//Network.RemoveRPCs(networkView.viewID); 
 			Network.Destroy(gameObject);

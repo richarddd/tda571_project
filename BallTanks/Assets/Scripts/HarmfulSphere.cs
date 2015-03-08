@@ -24,17 +24,16 @@ public class HarmfulSphere : MonoBehaviour {
 		StartCoroutine(Grow());
 	}
 	IEnumerator Grow() {
+			while (startSize <15) {
+				sphereTrans = this.transform;
+				sphereTrans.localScale +=new Vector3(0.1f, 0.1f, 0.1f);
+				startSize+=0.1f;
+				
+				
+				this.transform.localScale = sphereTrans.localScale;
+				yield return new WaitForSeconds (1);
+			}
 
-		while (startSize <15) {
-			sphereTrans = this.transform;
-			sphereTrans.localScale +=new Vector3(0.1f, 0.1f, 0.1f);
-			startSize+=0.1f;
-			
-			
-			this.transform.localScale = sphereTrans.localScale;
-			yield return new WaitForSeconds (1);
-		}
-		Destroy (this.gameObject);
-
+			Destroy (this.gameObject);
 	}
 }

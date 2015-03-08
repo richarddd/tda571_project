@@ -77,15 +77,16 @@ public class PlayerControl : MonoBehaviour
 	}
 
 	void powerUpHarmPlayers (Collider collider){
-		Network.Instantiate(harmfulSphere, collider.transform.position, collider.transform.rotation,0);
+		Instantiate(harmfulSphere, collider.transform.position, collider.transform.rotation);
 	}
 
 	void powerUpFreeze(Collider collider){
-		playerIsFrozen = true;
-		GameObject freezPowerUp = (GameObject) Network.Instantiate(freezePartSysPrefab, collider.transform.position, collider.transform.rotation,0);
-		freezPowerUp.GetComponent<FreezePartSys> ().setFrozenPlayer (this.gameObject);
-		myColor = renderer.material.GetColor ("_Color");
-		renderer.material.color = new Color (0.6f, 0.6f, 1.0f, 0.6f);
+			playerIsFrozen = true;
+			GameObject freezPowerUp = (GameObject) Instantiate(freezePartSysPrefab, collider.transform.position, collider.transform.rotation);
+			freezPowerUp.GetComponent<FreezePartSys> ().setFrozenPlayer (this.gameObject);
+			myColor = renderer.material.GetColor ("_Color");
+			renderer.material.color = new Color (0.6f, 0.6f, 1.0f, 0.6f);
+		
 	}
 
 	void powerUpGrow(){
@@ -94,7 +95,7 @@ public class PlayerControl : MonoBehaviour
 
 	void powerUpUnfreeze(){
 		playerIsFrozen = false;
-		Network.Instantiate(freezePowerupBreakingAudio, transform.position, Quaternion.identity,0);
+		Instantiate(freezePowerupBreakingAudio, transform.position, Quaternion.identity);
 		renderer.material.color = myColor;
 
 	}

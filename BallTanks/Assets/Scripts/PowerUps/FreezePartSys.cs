@@ -21,7 +21,6 @@ public class FreezePartSys : MonoBehaviour {
 	}
 
 	IEnumerator Life() {
-		
 		yield return new WaitForSeconds (5);
 		Destroy (this.gameObject);
 	}

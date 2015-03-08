@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class FixedCannon : MonoBehaviour
@@ -36,20 +36,22 @@ public class FixedCannon : MonoBehaviour
 		{
 			nextFire = Time.time + 1f;	
 			lastSynchronizationTime = Time.time;
-				networkView.observed = this;
+			networkView.observed = this;
 		}
 
 		void FireShot ()
 	{	
 			if (! playerControl.isPlayerFrozen ()) {
-
+				//fireShotDone = false;
 				Rigidbody shot = Instantiate (projectile, this.transform.position, this.transform.rotation) as Rigidbody;
 				//shot.AddForce (transform.TransformDirection(transform.forward) * shotForce * Time.deltaTime * -1);
 				shot.GetComponent<Exploder> ().setShooter (this.gameObject.transform.parent.gameObject);	
 				shot.rigidbody.velocity = ((transform.position - transform.parent.position) * shotVelocity);
+				Debug.Log("==============");
 				shotFired = true;
 				shotVelocity = 10f;
 				nextFire = Time.time + fireRate;
+				//fireShotDone = true;
 			}
 		}
 
@@ -72,17 +74,13 @@ public class FixedCannon : MonoBehaviour
 						stream.Serialize (ref isShooting);
 						stream.Serialize (ref syncedShotVelocity);
 
-						shotVelocity = syncedShotVelocity;
+						if(shotVelocity <  syncedShotVelocity){
+							shotVelocity = syncedShotVelocity;
+						}
 
-						Debug.Log(syncedShotVelocity);
-
-						//syncEndShotVelocity = syncedShotVelocity; //syncedShotVelocity *  * syncDelay;
-						//syncStartShotVelocity = rigidbody.position;
-			
 						if (isShooting) {
-							Debug.Log(shotVelocity);
-								FireShot ();
-								isShooting = false;
+							FireShot ();
+							isShooting = false;
 						}
 				}
 		}
