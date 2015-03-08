@@ -20,7 +20,7 @@ public class Exploder : MonoBehaviour {
 			foreach (Collider hit in colliders) {
 				if (hit && hit.rigidbody) {
 					hit.rigidbody.AddExplosionForce (power, explosionPos, radius, 3.0f);
-					Destroy (gameObject, 0.1f);
+					Destroy (gameObject);
 					if (hit.tag.Equals ("Player")) {
 						
 						PlayerHealthBar hitPlayer = hit.gameObject.transform.parent.GetComponent<PlayerHealthBar>();
