@@ -19,16 +19,13 @@ public class Killing : MonoBehaviour {
 	[RPC]
 	void PlayerJoined(){
 			noOfPlayers++;
-			Debug.Log ("Number of players " +noOfPlayers);	
 	
 
 	}
 
 	[RPC]
 	void PlayerLeft(){
-		noOfPlayers--;
-		Debug.Log ("Number of players " +noOfPlayers);	
-		
+		noOfPlayers--;	
 		
 	}
 
@@ -42,7 +39,6 @@ public class Killing : MonoBehaviour {
 	}
 
 	public void Kill (GameObject colInfo){
-		//Debug.Log (colInfo.name);
 		int lifeLeft = colInfo.gameObject.transform.parent.GetComponent<PlayerLife>().GetNumberOfLifes();
 		canvas.transform.GetChild(lifeLeft).gameObject.SetActive(false);
 		lifeLeft--;
@@ -54,7 +50,6 @@ public class Killing : MonoBehaviour {
 			colInfo.gameObject.transform.parent.GetComponent<PlayerLife>().setNumberOfLifes(lifeLeft);
 				
 			for (int i=0; i<colInfo.gameObject.transform.parent.childCount; i++){
-				//colInfo.gameObject.transform.parent.GetChild(i).gameObject.SetActive(false);
 				colInfo.gameObject.transform.parent.gameObject.SetActive(false);
 			}
 
@@ -70,9 +65,7 @@ public class Killing : MonoBehaviour {
 			//If the player lost the last life
 		else{
 			canvas.transform.GetChild(4).gameObject.SetActive(true);
-				//Destroy(colInfo.gameObject);
 			for (int i=0; i<colInfo.gameObject.transform.parent.childCount; i++){
-				//Destroy(colInfo.gameObject.transform.parent.GetChild(i).gameObject);
 				Destroy(colInfo.gameObject.transform.parent.gameObject);
 			}
 
@@ -82,7 +75,6 @@ public class Killing : MonoBehaviour {
 			noOfPlayers--;
 				
 			if (noOfPlayers<2){
-					//GameObject.FindGameObjectWithTag("Player").SendMessage("GameOver");
 				GameObject.FindGameObjectWithTag("Player").gameObject.transform.parent.networkView.RPC ("GameOver",RPCMode.OthersBuffered);
 			}
 		}
@@ -107,7 +99,6 @@ public class Killing : MonoBehaviour {
 		canvas.transform.GetChild(0).gameObject.SetActive(false);
 
 		for (int i=0; i<colInfo.gameObject.transform.parent.childCount; i++){
-			//colInfo.gameObject.transform.parent.GetChild(i).gameObject.SetActive(true);
 			colInfo.gameObject.transform.parent.gameObject.SetActive(true);
 
 		}
