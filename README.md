@@ -1,4 +1,4 @@
-# tda571_project
+﻿# tda571_project
 Readme File (Last edited 11/03/2015)
 
 Ball Tanks
@@ -19,6 +19,8 @@ Building the Game:
 3 - Point Unity to the main project folder on your hard drive (BallTanks\)
 4 - Click File->Build & Run to try out the game
 5 - You now have everything set up in Unity and you can add/remove/edit files or assets as necessary
+
+For the best experience possible, we recommend running the game at your monitor's native resolution, with the "Fantastic" quality setting.
 
 Credits:
 --------
