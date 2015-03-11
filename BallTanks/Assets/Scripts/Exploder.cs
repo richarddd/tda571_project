@@ -28,8 +28,8 @@ public class Exploder : MonoBehaviour {
 
 					}
 				}
+			Destroy (gameObject);
 			}
-		Destroy (gameObject);
 		}
 
 	public void setShooter(GameObject owner){

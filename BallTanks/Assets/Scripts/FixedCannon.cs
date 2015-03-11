@@ -31,9 +31,9 @@ public class FixedCannon : MonoBehaviour
 	void Start ()
 	{
 		playerControl = transform.parent.GetComponent<PlayerControl>();
-		Material playerMaterial = new Material (Shader.Find ("Sprites/Default"));
+		playerMaterial = new Material (Shader.Find ("Sprites/Default"));
 		playerMaterial.color = Color.green;
-		Material enemyMaterial = new Material(Shader.Find("Sprites/Default"));
+		enemyMaterial = new Material(Shader.Find("Sprites/Default"));
 		enemyMaterial.color = Color.red;
 	}
 
