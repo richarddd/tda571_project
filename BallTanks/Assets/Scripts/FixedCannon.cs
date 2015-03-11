@@ -24,10 +24,17 @@ public class FixedCannon : MonoBehaviour
 	private float nextFire = 0.0F;
 	private PlayerControl playerControl;
 
+	private Material playerMaterial;
+	private Material enemyMaterial;
+
 	
 	void Start ()
 	{
 		playerControl = transform.parent.GetComponent<PlayerControl>();
+		Material playerMaterial = new Material (Shader.Find ("Sprites/Default"));
+		playerMaterial.color = Color.green;
+		Material enemyMaterial = new Material(Shader.Find("Sprites/Default"));
+		enemyMaterial.color = Color.red;
 	}
 
 	void Awake ()
@@ -102,13 +109,9 @@ public class FixedCannon : MonoBehaviour
 	{
 		lineRenderer = GetComponent<LineRenderer>();
 		if (networkView.isMine) {
-			Material playerMat = new Material (Shader.Find ("Sprites/Default"));
-			playerMat.color = Color.green;
-			lineRenderer.material = playerMat;
+			lineRenderer.material = playerMaterial;
 		} else {
-			Material playerMat = new Material(Shader.Find("Sprites/Default"));
-			playerMat.color = Color.red;
-			lineRenderer.material = playerMat;
+			lineRenderer.material = enemyMaterial;
 		}
 
 		int numSteps = 20;
