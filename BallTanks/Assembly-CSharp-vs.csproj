@@ -90,7 +90,6 @@
      <Compile Include="Assets\Scripts\SpawnRocks.cs" />
      <Compile Include="Assets\Scripts\TextureDetector.cs" />
      <Compile Include="Assets\Scripts\WallControl.cs" />
-     <None Include="Assets\New Folder\environmental assets\Lava\Sources\Shaders\Lava.shader" />
      <None Include="Assets\Standard Assets\Water (Basic)\Sources\Shaders\FX-Water Simple.shader" />
      <None Include="Assets\Standard Assets\LavaPackage\Sources\Lava.shader" />
      <None Include="Assets\Detonator Explosion Framework\Resources\Detonator\Textures\HeatDistort.shader" />
