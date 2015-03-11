@@ -35,8 +35,6 @@ public class NetworkManager : Singleton<NetworkManager>
 
 						gameName = GUI.TextField (new Rect (10, 10, 200, 20), gameName, 25);
 
-						//if (GUI.InputField(new Rect(100, 250, 250, 100), "Refresh Hosts"))
-						//RefreshHostList();
 			
 						if (hostList != null) {
 								for (int i = 0; i < hostList.Length; i++) {
@@ -50,7 +48,7 @@ public class NetworkManager : Singleton<NetworkManager>
 		private void StartServer ()
 		{
 				Preferences.SaveGameName(gameName);
-				Network.InitializeServer (4, 25000, !Network.HavePublicAddress ());
+				Network.InitializeServer (6, 25000, !Network.HavePublicAddress ());
 				MasterServer.RegisterHost (typeName, gameName);
 
 		}
@@ -93,11 +91,7 @@ public class NetworkManager : Singleton<NetworkManager>
 
 		private void SpawnPlayer ()
 		{
-
-				//GameObject.FindGameObjectWithTag ("Killzone").networkView.RPC ("PlayerJoined", RPCMode.AllBuffered);
-				
 				GameObject player = (GameObject)Network.Instantiate (playerPrefab, new Vector3(Random.Range(-5,5),5,Random.Range(-5,5)), Quaternion.identity, 0);
-				//player.networkView.viewID;
 		}
 		
 		private void SpawnPowerupsManager ()
