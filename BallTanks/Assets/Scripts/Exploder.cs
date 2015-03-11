@@ -31,9 +31,8 @@ public class Exploder : MonoBehaviour {
 			}
 		Destroy (gameObject);
 		}
-	}
 
 	public void setShooter(GameObject owner){
 		shooter = owner;
 	}
-}
+	}
