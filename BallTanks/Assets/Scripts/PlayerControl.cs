@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PlayerControl : MonoBehaviour
 {
-	public float forceModifier = 500.0f;
+	float forceModifier = 500.0f;
 	public GameObject harmfulSphere;
 	public GameObject freezePartSysPrefab;
 	public GameObject freezePowerupBreakingAudio;
@@ -20,7 +20,7 @@ public class PlayerControl : MonoBehaviour
 
 	private bool powerupIsActive = false;
 	private bool playerIsFrozen = false;
-	public float powerupAffectingTime = 5;
+	float powerupAffectingTime = 5;
 	private float timePassed = 0f;
 	private int currentPowerupNumber;
 
@@ -140,14 +140,8 @@ public class PlayerControl : MonoBehaviour
 
 		void Awake ()
 		{
-				//networkview = gameObject.GetComponent<NetworkView> ();
-				//rigidbody = gameObject.GetComponent<Rigidbody> ();
 				networkView.observed = this;
 				lastSynchronizationTime = Time.time;
-
-				if (networkView.isMine) {
-						//Camera.main.GetComponent<SmoothFollow> ().setTarget (gameObject);
-				}
 		}
 		void Update(){
 
@@ -188,7 +182,6 @@ public class PlayerControl : MonoBehaviour
 				if (networkView.isMine) {
 
 						InputMovement ();
-						//InputColorChange();
 				} else {
 						SyncedMovement ();
 				}
@@ -214,13 +207,6 @@ public class PlayerControl : MonoBehaviour
 				Debug.DrawRay (forcePosition, forceDirection * forceModifier * Time.deltaTime);
 			}
 			
-		}
-
-
-		void OnCollisionStay (Collision collisionInfo)
-		{
-				//rigidbody.velocity = rigidbody.velocity * 0.95f;
-
 		}
 		
 		

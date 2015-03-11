@@ -6,7 +6,6 @@ public class CameraController : MonoBehaviour {
 
 	GameObject mainCamera;
 	float distanceBetweenPlayers;
-	float distanceFromMiddlePoint;
 	float aspectRatio;
 	GameObject[] activePlayers =null;
 	float [] playerXPos = null;
@@ -137,26 +136,10 @@ public class CameraController : MonoBehaviour {
 		}
 
 
-		distanceFromMiddlePoint = (mainCamera.transform.position - center).magnitude;
-		//TODO LOOK HERE
-		//Log zoom
-		//new Vector3(Mathf.Clamp(Time.time, maxX, minX), 0, 0);
 
-		//Camera.main.orthographicSize = Mathf.Log(distanceBetweenPlayers*50f);
-		//Mathf.Log(Mathf.Clamp(Camera.main.orthographicSize, maxX, minX));
-
-		//Exp zoom
-		//Camera.main.orthographicSize = Mathf.Exp(distanceBetweenPlayers*0.15f);
 
 		//Linear zoom
 		Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, newZoom, Time.deltaTime/2) ;
-
-		//Mathf.Clamp(Camera.main.orthographicSize, maxX, minX);
-		//******* TO HERE
-
-		//For perspective
-		//Camera.main.fieldOfView = 2.0f * Mathf.Rad2Deg * Mathf.Atan((0.5f * distanceBetweenPlayers) / (distanceFromMiddlePoint * aspectRatio));
-		//mainCamera.camera.fieldOfView += 0f;
 
 
 	}

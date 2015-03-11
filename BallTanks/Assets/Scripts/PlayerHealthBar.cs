@@ -21,8 +21,6 @@ public class PlayerHealthBar : MonoBehaviour {
 	void Start () {
 		player = transform.gameObject;
 		killZone= GameObject.FindGameObjectWithTag("Killzone");
-
-
 			
 		currentHealth = 100;
 			
@@ -74,11 +72,9 @@ public class PlayerHealthBar : MonoBehaviour {
 		// Update is called once per frame
 	void Update () {
 		if(networkView.isMine){
-			//Debug.Log("=========");
-			//Debug.Log(currentHealth);
 			if(currentHealth <= 0) {
 				killZone.GetComponent<Killing>().Kill(this.gameObject.transform.GetChild(0).gameObject);
-				Debug.Log("dead");
+
 					
 			}
 		}
